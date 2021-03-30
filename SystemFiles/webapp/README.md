@@ -1,3 +1,5 @@
+Bootstrapped with makesite.py
+
 makesite.py
 ===========
 
