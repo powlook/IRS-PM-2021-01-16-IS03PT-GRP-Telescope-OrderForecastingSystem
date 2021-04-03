@@ -35,6 +35,13 @@ def inventory():
     orders = Order.query.limit(5).all()
     return render_template( 'inventory.html', orders=orders, segment='inventory')
 
+@blueprint.route('/smart-procurement', methods=['GET'])
+@login_required
+def smart_procurement():
+    orders = Order.query.limit(5).all()
+    return render_template( 'smart-procurement.html', orders=orders, segment='smart-procurement')
+
+
 ### API
 @blueprint.route('/api/orders', methods=['GET'])
 @login_required
