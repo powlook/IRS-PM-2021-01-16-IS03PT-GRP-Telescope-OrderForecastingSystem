@@ -22,11 +22,6 @@
 
 <br />
 
-
-![Flask Bootstrap 5 Volt - Template project provided by AppSeed.](https://raw.githubusercontent.com/app-generator/flask-dashboard-volt/master/media/flask-dashboard-volt-screen.png)
-
-<br />
-
 ## How to use it
 
 ```bash

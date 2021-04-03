@@ -14,14 +14,26 @@ from jinja2 import TemplateNotFound
 @login_required
 def index():
 
-    return render_template('index.html', segment='index')
+    return render_template('dashboard.html', segment='index')
 
 ### Views
-@blueprint.route('/transactions.html', methods=['GET'])
+@blueprint.route('/orders', methods=['GET'])
 @login_required
 def orders():
     orders = Order.query.limit(5).all()
-    return render_template( 'transactions.html', orders=orders)
+    return render_template( 'orders.html', orders=orders, segment='orders')
+
+@blueprint.route('/products', methods=['GET'])
+@login_required
+def products():
+    orders = Order.query.limit(5).all()
+    return render_template( 'products.html', orders=orders, segment='products')
+
+@blueprint.route('/inventory', methods=['GET'])
+@login_required
+def inventory():
+    orders = Order.query.limit(5).all()
+    return render_template( 'inventory.html', orders=orders, segment='inventory')
 
 ### API
 @blueprint.route('/api/orders', methods=['GET'])
