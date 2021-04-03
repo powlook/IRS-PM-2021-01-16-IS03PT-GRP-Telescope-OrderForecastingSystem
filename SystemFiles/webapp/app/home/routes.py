@@ -4,7 +4,8 @@ Copyright (c) 2019 - present AppSeed.us
 """
 
 from app.home import blueprint
-from flask import render_template, redirect, url_for, request
+from app.home.models import Order
+from flask import render_template, redirect, url_for, request, jsonify
 from flask_login import login_required, current_user
 from app import login_manager
 from jinja2 import TemplateNotFound
@@ -14,6 +15,21 @@ from jinja2 import TemplateNotFound
 def index():
 
     return render_template('index.html', segment='index')
+
+### Views
+@blueprint.route('/transactions.html', methods=['GET'])
+@login_required
+def orders():
+    orders = Order.query.limit(5).all()
+    return render_template( 'transactions.html', orders=orders)
+
+### API
+@blueprint.route('/api/orders', methods=['GET'])
+@login_required
+def api_get_orders():
+    orders = Order.query.limit(5).all()
+    return jsonify(Order.serialize_list(orders))
+    # return jsonify({ 'order_id': 1, 'name': 'ABC' }, { 'order_id': 2, 'name': 'CDEF' })
 
 @blueprint.route('/<template>')
 @login_required
