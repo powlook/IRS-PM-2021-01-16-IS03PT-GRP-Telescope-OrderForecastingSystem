@@ -14,8 +14,16 @@ class Config(object):
     SECRET_KEY = config('SECRET_KEY', default='S#perS3crEt_007')
 
     # This will create a file in <app> FOLDER
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'db.sqlite3')
+    # SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'db.sqlite3')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_DATABASE_URI = '{}://{}:{}@{}:{}/{}'.format(
+        config( 'DB_ENGINE'   , default='mysql'    ),
+        config( 'DB_USERNAME' , default='iss'       ),
+        config( 'DB_PASS'     , default='6Jg3bwm56xtJ2mrfNQwvsaY$'          ),
+        config( 'DB_HOST'     , default='idm5peipdsus5o.crcvo0yw3sz7.ap-southeast-1.rds.amazonaws.com'     ),
+        config( 'DB_PORT'     , default=3306            ),
+        config( 'DB_NAME'     , default='iss_project_nicole' )
+    )
 
 class ProductionConfig(Config):
     DEBUG = False
