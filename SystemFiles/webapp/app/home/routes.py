@@ -4,11 +4,12 @@ Copyright (c) 2019 - present AppSeed.us
 """
 
 from app.home import blueprint
-from app.home.models import Order
+from app.home.models import Order, OrderProduct, ForecastArima
 from flask import render_template, redirect, url_for, request, jsonify
 from flask_login import login_required, current_user
 from app import login_manager
 from jinja2 import TemplateNotFound
+import sqlalchemy as sa
 
 @blueprint.route('/index')
 @login_required
@@ -38,8 +39,34 @@ def inventory():
 @blueprint.route('/smart-procurement', methods=['GET'])
 @login_required
 def smart_procurement():
-    orders = Order.query.limit(5).all()
-    return render_template( 'smart-procurement.html', orders=orders, segment='smart-procurement')
+    forecasts = ForecastArima.query.all()
+    orderproducts = OrderProduct.group_by_product()
+
+    dates = []
+    skus = []
+    original = []
+    for op in orderproducts:
+        dates.append(op.date)
+        skus.append(op.product_sku)
+        original.append(op)
+
+    dates = sorted(list(set(dates)))
+    skus = sorted(list(set(skus)))
+
+    emptyList = [0] * len(dates)
+    productDict = dict.fromkeys(skus, [0] * len(dates))
+
+    for ab in original:
+        try:
+            index = dates.index(ab.date)
+            curr_arr = productDict[ab.product_sku].copy()
+            curr_arr[index] = int(ab.quantity)
+            sku = ab.product_sku
+            productDict.update({ sku: curr_arr })
+        except:
+            return
+
+    return render_template( 'smart-procurement.html', forecasts=forecasts, productdict=productDict, dates=dates, segment='smart-procurement')
 
 
 ### API

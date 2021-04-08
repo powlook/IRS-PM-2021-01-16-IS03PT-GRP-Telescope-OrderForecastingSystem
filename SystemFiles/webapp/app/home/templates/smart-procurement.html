@@ -1,6 +1,6 @@
 {% extends "layouts/base.html" %}
 
-{% block title %} Products {% endblock %} 
+{% block title %} Smart Procurement {% endblock %} 
 
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}{% endblock stylesheets %}
@@ -9,14 +9,7 @@
 
   <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
       <div class="d-block mb-4 mb-md-0">
-          <nav aria-label="breadcrumb" class="d-none d-md-inline-block">
-              <ol class="breadcrumb breadcrumb-dark breadcrumb-transparent">
-                <li class="breadcrumb-item"><a href="#"><span class="fas fa-home"></span></a></li>
-                <li class="breadcrumb-item"><a href="#">Volt</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Products</li>
-              </ol>
-          </nav>
-          <h2 class="h4">All Products</h2>
+          <h2 class="h3">Smart Procurement</h2>
           <p class="mb-0">Your web analytics dashboard template.</p>
       </div>
       <div class="btn-toolbar mb-2 mb-md-0">
@@ -52,23 +45,55 @@
           </div>
       </div>
   </div>
+  <div>
+    <canvas id="myChart" width="400" height="150"></canvas>
+    <!-- {{ productdict | tojson }} -->
+    <script>
+        window.addEventListener('load', function() {
+            var mychart = document.getElementById("myChart")
+            var colors = ['pink', 'blue', 'cyan', 'red', 'white', 'yellow', 'purple', 'green', 'black', 'violet', 'pink', 'blue', 'cyan', 'red', 'white', 'yellow', 'purple', 'green', 'black', 'violet']
+            const data = {
+                labels: {{ dates | tojson }},
+                datasets: [
+                    {% for key in productdict.keys() %}
+                    {
+                        label: '{{ key }}',
+                        data: {{ productdict[key] }},
+                        fill: false,
+                        borderColor: colors[{{ loop.index0 }}],
+                        tension: 0.1
+                    },
+                    {% endfor %}
+                ]
+            };
+
+            var options = {}
+
+            var myLineChart = new Chart(mychart, {
+                type: 'line',
+                data: data,
+                options: options
+            });
+        })
+    </script>
+  </div>
   <div class="card card-body shadow-sm table-wrapper table-responsive">
       <table class="table table-hover">
           <thead>
               <tr>
-                  <th>Order #</th>
-                  <th>Items</th>
-                  <th>Total Price</th>
-                  <th>Created Date</th>
+                  <th>Forecast</th>
+                  <th>Test</th>
+                  <th>Predict</th>
+                  <th>Item</th>
               </tr>
           </thead>
           <tbody>
-            {% for order in orders %}
+            {% for forecast in forecasts %}
             <tr>
-                <td><a href="#" class="fw-bold">{{ order.id }}</a></td>    
-                <td><span class="fw-normal">{{ order.line_items }}</span></td>  
-                <td><span class="fw-bold">${{ order.total_price }}</span></td>
-                <td><span class="fw-normal">{{ order.created_at }}</span></td>
+                <td><a href="#" class="fw-bold">{{ forecast.month }}</a></td>    
+                <td><span class="fw-normal">{{ forecast.test }}</span></td>  
+                <td><span class="fw-bold">{{ forecast.predict }}</span></td>
+                <td><span class="fw-normal">{{ forecast.item }}</span></td>
             </tr>
             {% endfor %}
           </tbody>
