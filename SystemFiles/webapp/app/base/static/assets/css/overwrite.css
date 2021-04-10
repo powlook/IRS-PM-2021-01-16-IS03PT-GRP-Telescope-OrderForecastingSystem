@@ -20,3 +20,7 @@ th.sticky-col {
     position: relative;
     white-space: nowrap;
 }
+
+.label-toggle {
+    margin-right: 10px;
+}

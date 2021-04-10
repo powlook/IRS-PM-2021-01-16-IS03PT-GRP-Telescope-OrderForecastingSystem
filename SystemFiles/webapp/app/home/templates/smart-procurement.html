@@ -12,12 +12,6 @@
           <h2 class="h3">Smart Procurement</h2>
           <p class="mb-0">Your web analytics dashboard template.</p>
       </div>
-      <div class="btn-toolbar mb-2 mb-md-0">
-          <div class="btn-group">
-              <button type="button" class="btn btn-sm btn-outline-primary">Share</button>
-              <button type="button" class="btn btn-sm btn-outline-primary">Export</button>
-          </div>
-      </div>
   </div>
   <div class="table-settings mb-4">
       <div class="row align-items-center">
@@ -44,6 +38,14 @@
   <div>
     <canvas id="myChart" width="400" height="150"></canvas>
   </div>
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <div class="btn-group">
+                <button type="button" class="btn btn-sm btn-outline-primary">Share</button>
+                <button type="button" class="btn btn-sm btn-outline-primary">Export</button>
+            </div>
+        </div>
+    </div>
   <div class="card card-body shadow-sm table-wrapper table-responsive table-wrapper-forecast">
     <div class="wrapper">
         <table id="myTable" class="table table-hover">
@@ -101,7 +103,8 @@
                 data: skuOrders[s],
                 fill: false,
                 borderColor: colors[index],
-                tension: 0.1
+                tension: 0.1,
+                hidden: true,
             }
         })
 
@@ -114,7 +117,8 @@
                 borderDash: [5],
                 lineWidth: 5,
                 tension: 0.1,
-                pointStyle: 'star'
+                pointStyle: 'star',
+                hidden: true,
             }
         })
 
@@ -145,7 +149,7 @@
         const headers = ['SKU', ...dates, ...forecastDates];
         const headersHtml = headers.reduce((acc, curr, index) => {
            if (index === 0) {
-                acc += `<th class="sticky-col sku-col">${curr}</th>`;
+                acc += `<th class="sticky-col sku-col"><input class="form-check-input label-toggle" type="checkbox" value="" id="check-all">${curr}</th>`;
            } else {
                 acc += `<th>${curr}</th>`;
            }
@@ -153,11 +157,14 @@
            return acc;
         }, '')
 
-        const rowsHtml = Object.keys(skuByDate).reduce((acc, curr) => {
+        const rowsHtml = Object.keys(skuByDate).reduce((acc, curr, index) => {
             const forecast = 0; // todo;
             acc += `
                 <tr>
-                    <td class="sticky-col sku-col"><a href="#" class="fw-bold">${curr}</a></td>
+                    <td class="sticky-col sku-col fw-bold">
+                        <input class="form-check-input label-toggle" type="checkbox" value="" onclick="handleCheckboxClick(this, ${index})">
+                        ${curr}
+                    </td>
                     ${(skuByDate[curr]).map(d => `<td><span class="fw-normal">${d}</td>`).join('')}
                 </tr>`.replace(/\s+/g, ' ');
             return acc;
@@ -165,6 +172,12 @@
 
         table.querySelector('thead tr').innerHTML = headersHtml;
         table.querySelector('tbody').innerHTML = rowsHtml;
+    }
+
+    function handleCheckboxClick(checkbox, index) {
+        window.chart.setDatasetVisibility(index, checkbox.checked);
+        window.chart.setDatasetVisibility(index + 20, checkbox.checked);
+        window.chart.update();
     }
 
     function initDatePicker(dates, currentDate) {
@@ -194,6 +207,8 @@
         return chart;
     }
 
+
+
     window.addEventListener('load', function() {
         const orderproducts = {{ orderproducts | tojson }}
         const forecasts = {{ forecasts | tojson }}
@@ -209,6 +224,8 @@
         startDate.addEventListener('change', function(e) {
             currChart = updateData(orderproducts, skus, dates, e.target.value, currChart, forecasts['arima'])
         });
+
+        document.querySelector('#myTable tbody tr:nth-child(1) input.form-check-input').click();
     });
 </script>
 
