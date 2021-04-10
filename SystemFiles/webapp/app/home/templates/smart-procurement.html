@@ -20,113 +20,149 @@
       </div>
   </div>
   <div class="table-settings mb-4">
-      <div class="row align-items-center justify-content-between">
-          <div class="col col-md-6 col-lg-3 col-xl-4">
-              <div class="input-group">
-                  <span class="input-group-text" id="basic-addon2"><span class="fas fa-search"></span></span>
-                  <input type="text" class="form-control" id="exampleInputIconLeft" placeholder="Search" aria-label="Search" aria-describedby="basic-addon2">
-              </div>
-          </div>
-          <div class="col-4 col-md-2 col-xl-1 ps-md-0 text-right">
-              <div class="btn-group">
-                  <button class="btn btn-link text-dark dropdown-toggle dropdown-toggle-split m-0 p-1" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      <span class="icon icon-sm icon-gray pt-1">
-                          <span class="fas fa-cog"></span>
-                      </span>
-                      <span class="sr-only">Toggle Dropdown</span>
-                  </button>
-                  <div class="dropdown-menu dropdown-menu-xs dropdown-menu-end pb-0">
-                      <span class="small ps-3 fw-bold text-dark">Show</span>
-                      <a class="dropdown-item d-flex fw-bold" href="#">10 <span class="icon icon-small ms-auto"><span class="fas fa-check"></span></span></a>
-                      <a class="dropdown-item fw-bold" href="#">20</a>
-                      <a class="dropdown-item fw-bold" href="#">30</a>
-                  </div>
-              </div>
-          </div>
-      </div>
+      <div class="row align-items-center">
+        <div class="col-md-6 mb-3">
+            <label for="start_date">Start Date</label>
+            <div class="input-group">
+                <span class="input-group-text"><span class="far fa-calendar-alt"></span></span>
+                <select class="form-select mb-0" id="startDate" aria-label="Start Date">
+                </select>
+            </div>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label for="forecast_model">Model</label>
+            <select class="form-select mb-0" id="forecast_model" aria-label="Forecast model">
+                <option value="1">Recommended</option>
+                <option value="2">ARIMA</option>
+                <option value="3">SARIMA</option>
+                <option value="4">LSTM</option>
+                <option value="5">Rolling MA</option>
+            </select>
+        </div>
+    </div>
   </div>
   <div>
     <canvas id="myChart" width="400" height="150"></canvas>
-    <!-- {{ productdict | tojson }} -->
-    <script>
-        window.addEventListener('load', function() {
-            var mychart = document.getElementById("myChart")
-            var colors = ['pink', 'blue', 'cyan', 'red', 'white', 'yellow', 'purple', 'green', 'black', 'violet', 'pink', 'blue', 'cyan', 'red', 'white', 'yellow', 'purple', 'green', 'black', 'violet']
-            const data = {
-                labels: {{ dates | tojson }},
-                datasets: [
-                    {% for key in productdict.keys() %}
-                    {
-                        label: '{{ key }}',
-                        data: {{ productdict[key] }},
-                        fill: false,
-                        borderColor: colors[{{ loop.index0 }}],
-                        tension: 0.1
-                    },
-                    {% endfor %}
-                ]
-            };
-
-            var options = {}
-
-            var myLineChart = new Chart(mychart, {
-                type: 'line',
-                data: data,
-                options: options
-            });
-        })
-    </script>
   </div>
-  <div class="card card-body shadow-sm table-wrapper table-responsive">
-      <table class="table table-hover">
-          <thead>
-              <tr>
-                  <th>Forecast</th>
-                  <th>Test</th>
-                  <th>Predict</th>
-                  <th>Item</th>
-              </tr>
-          </thead>
-          <tbody>
-            {% for forecast in forecasts %}
-            <tr>
-                <td><a href="#" class="fw-bold">{{ forecast.month }}</a></td>    
-                <td><span class="fw-normal">{{ forecast.test }}</span></td>  
-                <td><span class="fw-bold">{{ forecast.predict }}</span></td>
-                <td><span class="fw-normal">{{ forecast.item }}</span></td>
-            </tr>
-            {% endfor %}
-          </tbody>
-      </table>
-      <div class="card-footer px-3 border-0 d-flex align-items-center justify-content-between">
-          <nav aria-label="Page navigation example">
-              <ul class="pagination mb-0">
-                  <li class="page-item">
-                      <a class="page-link" href="#">Previous</a>
-                  </li>
-                  <li class="page-item">
-                      <a class="page-link" href="#">1</a>
-                  </li>
-                  <li class="page-item active">
-                      <a class="page-link" href="#">2</a>
-                  </li>
-                  <li class="page-item">
-                      <a class="page-link" href="#">3</a>
-                  </li>
-                  <li class="page-item">
-                      <a class="page-link" href="#">4</a>
-                  </li>
-                  <li class="page-item">
-                      <a class="page-link" href="#">5</a>
-                  </li>
-                  <li class="page-item">
-                      <a class="page-link" href="#">Next</a>
-                  </li>
-              </ul>
-          </nav>
-          <div class="fw-bold small d-none d-lg-block">Showing <b>5</b> out of <b>25</b> entries</div>
-      </div>
+  <div class="card card-body shadow-sm table-wrapper table-responsive table-wrapper-forecast">
+    <div class="wrapper">
+        <table id="myTable" class="table table-hover">
+            <thead>
+                <tr>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
   </div>
+  <script>
+    const colors = ['#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231', '#911eb4', '#46f0f0', '#f032e6', '#bcf60c', '#fabebe', '#008080', '#e6beff', '#9a6324', '#fffac8', '#800000', '#aaffc3', '#808000', '#ffd8b1', '#000075', '#808080', '#ffffff', '#000000'];
+    
+    function getSkuByDate(orderproducts, skus, dates) {
+        const skuQtyByDate = skus.reduce((acc, sku) => {
+            const skuData = _.filter(orderproducts, { sku: sku })
+            const dateQty = dates.map((date) => {
+                const skuDate = _.find(skuData, { date: date })
+                if (skuDate) {
+                    return skuDate.qty;
+                }
+                return 0;
+            })
+            acc[sku] = dateQty;
+            return acc;
+        }, {});
+
+        return skuQtyByDate;
+    }
+
+    function plotData(myChart, skuOrders, dates) {
+        const data = {
+            labels: dates,
+            datasets: Object.keys(skuOrders).map((s, index) => {
+                return {
+                    label: s,
+                    data: skuOrders[s],
+                    fill: false,
+                    borderColor: colors[index],
+                    tension: 0.1
+                }
+            }),
+        };
+
+        var options = {}
+
+        var myLineChart = new Chart(myChart, {
+            type: 'line',
+            data: data,
+            options: options
+        });
+
+        return myLineChart;
+    }
+
+    function populateTable(table, skuByDate, dates) {
+        const headers = ['SKU', ...dates, 'Forecast'];
+        const headersHtml = headers.reduce((acc, curr, index) => {
+           if (index === 0) {
+                acc += `<th class="sticky-col sku-col">${curr}</th>`;
+           } else {
+                acc += `<th>${curr}</th>`;
+           }
+          
+           return acc;
+        }, '')
+
+        const rowsHtml = Object.keys(skuByDate).reduce((acc, curr) => {
+            const forecast = 0; // todo;
+            acc += `
+                <tr>
+                    <td class="sticky-col sku-col"><a href="#" class="fw-bold">${curr}</a></td>
+                    ${(skuByDate[curr]).map(d => `<td><span class="fw-normal">${d}</td>`).join('')}
+                    <td><span class="fw-normal">${forecast}</span></td>
+                </tr>`.replace(/\s+/g, ' ');
+            return acc;
+        }, '');
+
+        table.querySelector('thead tr').innerHTML = headersHtml;
+        table.querySelector('tbody').innerHTML = rowsHtml;
+    }
+
+    function initDatePicker(dates, currentDate) {
+        const datePicker = document.getElementById('startDate');
+        datePicker.innerHTML = _.map(dates, (d) => `<option value="${d}">${d}</option>`).join('');
+        datePicker.value = currentDate;
+    }
+
+    function updateData(orderproducts, skus, dates, initDate, currChart) {
+        const myChart = document.getElementById('myChart');
+        const myTable = document.getElementById('myTable');
+
+        const filteredDates = _.filter(dates, d => (d >= initDate));
+        const skuByDate = getSkuByDate(orderproducts, skus, filteredDates);
+
+        if (currChart) { currChart.destroy() }
+        const chart = plotData(myChart, skuByDate, filteredDates);
+        populateTable(myTable, skuByDate, filteredDates);
+
+        return chart;
+    }
+
+    window.addEventListener('load', function() {
+        const orderproducts = {{ orderproducts | tojson }}
+        const skus = _.sortBy(_.uniq(_.map(orderproducts, 'sku')));
+        const dates = _.sortBy(_.uniq(_.map(orderproducts, 'date')));
+        const initDate = '2020-01';
+        let currChart = null;
+        initDatePicker(dates, '2020-01');
+        currChart = updateData(orderproducts, skus, dates, initDate, currChart)
+        
+        const startDate = document.getElementById('startDate');
+        startDate.addEventListener('change', function(e) {
+            currChart = updateData(orderproducts, skus, dates, e.target.value, currChart)
+        });
+    });
+</script>
 
 {% endblock content %}
 

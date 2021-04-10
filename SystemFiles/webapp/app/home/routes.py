@@ -42,31 +42,16 @@ def smart_procurement():
     forecasts = ForecastArima.query.all()
     orderproducts = OrderProduct.group_by_product()
 
-    dates = []
-    skus = []
-    original = []
+    formatted_op = []
     for op in orderproducts:
-        dates.append(op.date)
-        skus.append(op.product_sku)
-        original.append(op)
+        p = {
+            'date': op.date,
+            'sku': op.product_sku,
+            'qty': int(op.quantity),
+        }
+        formatted_op.append(p)
 
-    dates = sorted(list(set(dates)))
-    skus = sorted(list(set(skus)))
-
-    emptyList = [0] * len(dates)
-    productDict = dict.fromkeys(skus, [0] * len(dates))
-
-    for ab in original:
-        try:
-            index = dates.index(ab.date)
-            curr_arr = productDict[ab.product_sku].copy()
-            curr_arr[index] = int(ab.quantity)
-            sku = ab.product_sku
-            productDict.update({ sku: curr_arr })
-        except:
-            return
-
-    return render_template( 'smart-procurement.html', forecasts=forecasts, productdict=productDict, dates=dates, segment='smart-procurement')
+    return render_template( 'smart-procurement.html', orderproducts=formatted_op, forecasts=forecasts, segment='smart-procurement')
 
 
 ### API

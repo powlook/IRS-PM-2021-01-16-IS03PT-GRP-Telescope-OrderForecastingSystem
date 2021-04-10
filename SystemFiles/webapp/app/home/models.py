@@ -48,7 +48,7 @@ class OrderProduct(db.Model, Serializer):
         return d
 
     def group_by_product():
-        query = text("SELECT DATE_FORMAT(order_date, '%Y-%m') AS date, product_sku, SUM(product_quantity) AS quantity FROM orders_products_v2 WHERE order_date >= '2020-01-01' and order_date <= '2020-12-31' and product_sku IN (SELECT DISTINCT(item) FROM top20forecasts_ARIMA) GROUP BY `date`, product_sku")
+        query = text("SELECT DATE_FORMAT(order_date, '%Y-%m') AS date, product_sku, SUM(product_quantity) AS quantity FROM orders_products_v2 WHERE product_sku IN (SELECT DISTINCT(item) FROM top20forecasts_ARIMA) GROUP BY `date`, product_sku")
         d = db.engine.execute(query)
         return d
 

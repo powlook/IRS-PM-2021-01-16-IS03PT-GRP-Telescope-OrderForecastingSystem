@@ -1,0 +1,22 @@
+.table-wrapper-forecast {
+    overflow: unset;
+}
+
+td.sticky-col,
+th.sticky-col {
+    position: sticky;
+    background-color: white;
+}
+
+.sku-col {
+    width: 200px;
+    min-width: 200px;
+    max-width: 200px;
+    left: 0px;
+}
+
+.wrapper {
+    overflow-x: auto;
+    position: relative;
+    white-space: nowrap;
+}
