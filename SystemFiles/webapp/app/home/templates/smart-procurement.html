@@ -76,21 +76,60 @@
         return skuQtyByDate;
     }
 
-    function plotData(myChart, skuOrders, dates) {
+    function getSkuForecastByDate(forecasts, skus) {
+        const dates = ['m+1', 'm+2', 'm+3'];
+        const forecastQtyByDate = skus.reduce((acc, sku) => {
+            const skuData = _.filter(forecasts, { item: sku })
+            const dateQty = dates.map((date) => {
+                const skuDate = _.find(skuData, { month: date })
+                if (skuDate) {
+                    return skuDate.predict;
+                }
+                return 0;
+            })
+            acc[sku] = dateQty;
+            return acc;
+        }, {});
+
+        return forecastQtyByDate;
+    }
+
+    function plotData(myChart, skuOrders, dates, forecasts) {
+        const actual = Object.keys(skuOrders).map((s, index) => {
+            return {
+                label: s,
+                data: skuOrders[s],
+                fill: false,
+                borderColor: colors[index],
+                tension: 0.1
+            }
+        })
+
+        const forecast = Object.keys(forecasts).map((s, index) => {
+            return {
+                label: `${s} (Forecast)`,
+                data: [...(_.times(12, _.constant(null))), ...forecasts[s]],
+                fill: false,
+                borderColor: colors[index],
+                borderDash: [5],
+                lineWidth: 5,
+                tension: 0.1,
+                pointStyle: 'star'
+            }
+        })
+
         const data = {
             labels: dates,
-            datasets: Object.keys(skuOrders).map((s, index) => {
-                return {
-                    label: s,
-                    data: skuOrders[s],
-                    fill: false,
-                    borderColor: colors[index],
-                    tension: 0.1
-                }
-            }),
+            datasets: [...actual, ...forecast]
         };
 
-        var options = {}
+        var options = {
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
 
         var myLineChart = new Chart(myChart, {
             type: 'line',
@@ -98,11 +137,12 @@
             options: options
         });
 
+        window.chart = myLineChart;
         return myLineChart;
     }
 
-    function populateTable(table, skuByDate, dates) {
-        const headers = ['SKU', ...dates, 'Forecast'];
+    function populateTable(table, skuByDate, dates, forecastDates) {
+        const headers = ['SKU', ...dates, ...forecastDates];
         const headersHtml = headers.reduce((acc, curr, index) => {
            if (index === 0) {
                 acc += `<th class="sticky-col sku-col">${curr}</th>`;
@@ -119,7 +159,6 @@
                 <tr>
                     <td class="sticky-col sku-col"><a href="#" class="fw-bold">${curr}</a></td>
                     ${(skuByDate[curr]).map(d => `<td><span class="fw-normal">${d}</td>`).join('')}
-                    <td><span class="fw-normal">${forecast}</span></td>
                 </tr>`.replace(/\s+/g, ' ');
             return acc;
         }, '');
@@ -134,32 +173,41 @@
         datePicker.value = currentDate;
     }
 
-    function updateData(orderproducts, skus, dates, initDate, currChart) {
+    function updateData(orderproducts, skus, dates, initDate, currChart, forecasts) {
         const myChart = document.getElementById('myChart');
         const myTable = document.getElementById('myTable');
 
         const filteredDates = _.filter(dates, d => (d >= initDate));
         const skuByDate = getSkuByDate(orderproducts, skus, filteredDates);
+        const skuForecastByDate = getSkuForecastByDate(forecasts, skus);
+        const skuData = Object.keys(skuByDate).reduce((acc, curr) => {
+            acc[curr] = [...skuByDate[curr], ...skuForecastByDate[curr]]
+            return acc;
+        }, {})
+
+        const forecastDates = ['2021-01', '2021-02', '2021-03']
 
         if (currChart) { currChart.destroy() }
-        const chart = plotData(myChart, skuByDate, filteredDates);
-        populateTable(myTable, skuByDate, filteredDates);
+        const chart = plotData(myChart, skuData, filteredDates, skuForecastByDate);
+        populateTable(myTable, skuData, filteredDates, forecastDates);
 
         return chart;
     }
 
     window.addEventListener('load', function() {
         const orderproducts = {{ orderproducts | tojson }}
+        const forecasts = {{ forecasts | tojson }}
+
         const skus = _.sortBy(_.uniq(_.map(orderproducts, 'sku')));
         const dates = _.sortBy(_.uniq(_.map(orderproducts, 'date')));
         const initDate = '2020-01';
         let currChart = null;
         initDatePicker(dates, '2020-01');
-        currChart = updateData(orderproducts, skus, dates, initDate, currChart)
+        currChart = updateData(orderproducts, skus, dates, initDate, currChart, forecasts['arima'])
         
         const startDate = document.getElementById('startDate');
         startDate.addEventListener('change', function(e) {
-            currChart = updateData(orderproducts, skus, dates, e.target.value, currChart)
+            currChart = updateData(orderproducts, skus, dates, e.target.value, currChart, forecasts['arima'])
         });
     });
 </script>

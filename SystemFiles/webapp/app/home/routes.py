@@ -39,7 +39,13 @@ def inventory():
 @blueprint.route('/smart-procurement', methods=['GET'])
 @login_required
 def smart_procurement():
-    forecasts = ForecastArima.query.all()
+    forecastArima = ForecastArima.serialize_list(ForecastArima.query.all())
+    # forecastArima = ForecastArima.query.all()
+    # forecastArima = ForecastArima.query.all()
+    # forecastArima = ForecastArima.query.all()
+    forecasts = {
+        'arima': forecastArima,
+    }
     orderproducts = OrderProduct.group_by_product()
 
     formatted_op = []
@@ -51,7 +57,7 @@ def smart_procurement():
         }
         formatted_op.append(p)
 
-    return render_template( 'smart-procurement.html', orderproducts=formatted_op, forecasts=forecasts, segment='smart-procurement')
+    return render_template('smart-procurement.html', orderproducts=formatted_op, forecasts=forecasts, segment='smart-procurement')
 
 
 ### API
