@@ -1,8 +1,28 @@
-_site
-*.pyc
-__pycache__
+# byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# tests and coverage
+*.pytest_cache
 .coverage
-htmlcov
-*.sw?
-.DS_Store
+
+# database & logs
+*.db
+*.sqlite3
+*.log
+
+# venv
+env
 venv
+
+# other
+.DS_Store
+
+# sphinx docs 
+_build
+_static
+_templates
+
+# javascript
+package-lock.json
+.vscode/symbols.json
