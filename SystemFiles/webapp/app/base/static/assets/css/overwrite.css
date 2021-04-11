@@ -24,3 +24,7 @@ th.sticky-col {
 .label-toggle {
     margin-right: 10px;
 }
+
+#navbarSupportedContent {
+    border-bottom: 1px solid #D1D5DB;
+}

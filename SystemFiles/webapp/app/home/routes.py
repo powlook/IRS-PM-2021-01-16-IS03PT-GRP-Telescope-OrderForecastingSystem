@@ -22,19 +22,19 @@ def index():
 @login_required
 def orders():
     orders = Order.query.limit(5).all()
-    return render_template( 'orders.html', orders=orders, segment='orders')
+    return render_template( 'orders.html', orders=orders, segment='orders', title="Orders")
 
 @blueprint.route('/products', methods=['GET'])
 @login_required
 def products():
     orders = Order.query.limit(5).all()
-    return render_template( 'products.html', orders=orders, segment='products')
+    return render_template( 'products.html', orders=orders, segment='products', title="Products")
 
 @blueprint.route('/inventory', methods=['GET'])
 @login_required
 def inventory():
     orders = Order.query.limit(5).all()
-    return render_template( 'inventory.html', orders=orders, segment='inventory')
+    return render_template( 'inventory.html', orders=orders, segment='inventory', title="Inventory")
 
 @blueprint.route('/smart-procurement', methods=['GET'])
 @login_required
@@ -57,7 +57,7 @@ def smart_procurement():
         }
         formatted_op.append(p)
 
-    return render_template('smart-procurement.html', orderproducts=formatted_op, forecasts=forecasts, segment='smart-procurement')
+    return render_template('smart-procurement.html', orderproducts=formatted_op, forecasts=forecasts, segment='smart-procurement', title="Smart Procurement")
 
 
 ### API
