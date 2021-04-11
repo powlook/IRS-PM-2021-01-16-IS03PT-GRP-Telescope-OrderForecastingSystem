@@ -6,7 +6,7 @@
 
 > Features
 
-- DBMS: SQLite, PostgreSQL (production) 
+- DBMS: SQLite, MySQL/PostgreSQL (production) 
 - DB Tools: SQLAlchemy ORM, Flask-Migrate (schema migrations)
 - Modular design with **Blueprints**, simple codebase
 - Session-Based authentication (via **flask_login**), Forms validation
@@ -25,23 +25,11 @@
 ## How to use it
 
 ```bash
-$ # Get the code
 $ git clone https://github.com/app-generator/flask-dashboard-volt.git
 $ cd flask-dashboard-volt
 $
-$ # Virtualenv modules installation (Unix based systems)
-$ virtualenv env
-$ source env/bin/activate
-$
-$ # Virtualenv modules installation (Windows based systems)
-$ # virtualenv env
-$ # .\env\Scripts\activate
-$
 $ # Install modules - SQLite Database
-$ pip3 install -r requirements.txt
-$
-$ # OR with PostgreSQL connector
-$ # pip install -r requirements-pgsql.txt
+$ pip3 install -r requirements-mysql.txt
 $
 $ # Set the FLASK_APP environment variable
 $ (Unix/Mac) export FLASK_APP=run.py
