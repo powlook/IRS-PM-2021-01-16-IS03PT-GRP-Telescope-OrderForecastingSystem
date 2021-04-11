@@ -15,7 +15,7 @@
   <div class="table-settings mb-4">
       <div class="row align-items-center">
         <div class="col-md-6 mb-3">
-            <label for="start_date">Start Date</label>
+            <label for="startDate">Start Date</label>
             <div class="input-group">
                 <span class="input-group-text"><span class="far fa-calendar-alt"></span></span>
                 <select class="form-select mb-0" id="startDate" aria-label="Start Date">
@@ -23,13 +23,13 @@
             </div>
         </div>
         <div class="col-md-6 mb-3">
-            <label for="forecast_model">Model</label>
-            <select class="form-select mb-0" id="forecast_model" aria-label="Forecast model">
-                <option value="1">Recommended</option>
-                <option value="2">ARIMA</option>
-                <option value="3">SARIMA</option>
-                <option value="4">LSTM</option>
-                <option value="5">Rolling MA</option>
+            <label for="forecastModel">Model</label>
+            <select class="form-select mb-0" id="forecastModel" aria-label="Forecast model">
+                <option value="lstm">Recommended</option>
+                <option value="arima">ARIMA</option>
+                <option value="sarima">SARIMA</option>
+                <option value="lstm">LSTM</option>
+                <option value="rolling-ma">Rolling MA</option>
             </select>
         </div>
     </div>
@@ -271,11 +271,18 @@
         initDatePicker(dates, '2020-01');
         window.chartState = _.times(skus.length, _.constant(false));
         window.chartState[0] = true;
-        currChart = updateData(orderproducts, skus, dates, initDate, currChart, forecasts['arima'])
+        currChart = updateData(orderproducts, skus, dates, initDate, currChart, forecasts['recommended'])
         
         const startDate = document.getElementById('startDate');
         startDate.addEventListener('change', function(e) {
-            currChart = updateData(orderproducts, skus, dates, e.target.value, currChart, forecasts['arima'])
+            const forecastVal = document.getElementById('forecastModel').value;
+            currChart = updateData(orderproducts, skus, dates, e.target.value, currChart, forecasts[forecast])
+        });
+
+        const forecast = document.getElementById('forecastModel');
+        forecast.addEventListener('change', function(e) {
+            const startDateVal = document.getElementById('startDate').value;
+            currChart = updateData(orderproducts, skus, dates, startDateVal, currChart, forecasts[e.target.value])
         });
     });
 </script>

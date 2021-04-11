@@ -72,3 +72,48 @@ class ForecastArima(db.Model, Serializer):
         d = db.engine.execute(query, limit=5)
         return d
 
+
+class ForecastSarima(db.Model, Serializer):
+    __tablename__ = 'top20forecasts_SARIMA'
+
+    month = Column(Text, primary_key=True)
+    test = Column(Integer)
+    predict = Column(Integer)
+    item = Column(Text, primary_key=True)
+
+    def __repr__(self):
+        return str(self.month + '_' + self.item)
+
+    def serialize(self):
+        d = Serializer.serialize(self)
+        return d
+
+class ForecastRollingMA(db.Model, Serializer):
+    __tablename__ = 'top20forecasts_RollingMA'
+
+    month = Column(Text, primary_key=True)
+    test = Column(Integer)
+    predict = Column(Integer)
+    item = Column(Text, primary_key=True)
+
+    def __repr__(self):
+        return str(self.month + '_' + self.item)
+
+    def serialize(self):
+        d = Serializer.serialize(self)
+        return d
+
+class ForecastLSTM(db.Model, Serializer):
+    __tablename__ = 'top20forecasts_LSTM'
+
+    month = Column(Text, primary_key=True)
+    test = Column(Integer)
+    predict = Column(Integer)
+    item = Column(Text, primary_key=True)
+
+    def __repr__(self):
+        return str(self.month + '_' + self.item)
+
+    def serialize(self):
+        d = Serializer.serialize(self)
+        return d

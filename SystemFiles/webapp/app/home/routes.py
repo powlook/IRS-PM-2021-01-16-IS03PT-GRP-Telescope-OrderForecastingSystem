@@ -4,7 +4,7 @@ Copyright (c) 2019 - present AppSeed.us
 """
 
 from app.home import blueprint
-from app.home.models import Order, OrderProduct, ForecastArima
+from app.home.models import Order, OrderProduct, ForecastArima, ForecastSarima, ForecastLSTM, ForecastRollingMA
 from flask import render_template, redirect, url_for, request, jsonify
 from flask_login import login_required, current_user
 from app import login_manager
@@ -40,11 +40,15 @@ def inventory():
 @login_required
 def smart_procurement():
     forecastArima = ForecastArima.serialize_list(ForecastArima.query.all())
-    # forecastArima = ForecastArima.query.all()
-    # forecastArima = ForecastArima.query.all()
-    # forecastArima = ForecastArima.query.all()
+    forecastSarima = ForecastSarima.serialize_list(ForecastSarima.query.all())
+    forecastLSTM = ForecastLSTM.serialize_list(ForecastLSTM.query.all())
+    forecastRollingMA = ForecastRollingMA.serialize_list(ForecastRollingMA.query.all())
     forecasts = {
+        'recommended': forecastLSTM,
         'arima': forecastArima,
+        'sarima': forecastSarima,
+        'lstm': forecastLSTM,
+        'rolling-ma': forecastRollingMA
     }
     orderproducts = OrderProduct.group_by_product()
 
