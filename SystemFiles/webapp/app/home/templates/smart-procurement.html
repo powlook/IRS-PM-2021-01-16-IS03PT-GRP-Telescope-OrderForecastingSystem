@@ -49,8 +49,6 @@
     <div class="wrapper">
         <table id="myTable" class="table table-hover">
             <thead>
-                <tr>
-                </tr>
             </thead>
             <tbody>
             </tbody>
@@ -103,21 +101,21 @@
                 fill: false,
                 borderColor: colors[index],
                 tension: 0.1,
-                hidden: true,
+                hidden: !window.chartState[index],
             }
         })
 
         const forecast = Object.keys(forecasts).map((s, index) => {
             return {
                 label: `${s} (Forecast)`,
-                data: [...(_.times(12, _.constant(null))), ...forecasts[s]],
+                data: [...(_.times((dates.length-3), _.constant(null))), ...forecasts[s]],
                 fill: false,
                 borderColor: colors[index],
                 borderDash: [5],
                 lineWidth: 5,
                 tension: 0.1,
                 pointStyle: 'star',
-                hidden: true,
+                hidden: !window.chartState[index % Object.keys(forecasts).length],
             }
         })
 
@@ -145,37 +143,91 @@
     }
 
     function populateTable(table, skuByDate, dates, forecastDates) {
-        const headers = ['SKU', ...dates, ...forecastDates];
+        const headers = [...dates, ...forecastDates];
         const headersHtml = headers.reduce((acc, curr, index) => {
-           if (index === 0) {
-                acc += `<th class="sticky-col sku-col"><input class="form-check-input label-toggle" type="checkbox" value="" id="check-all">${curr}</th>`;
-           } else {
+            if (index < dates.length) {
                 acc += `<th>${curr}</th>`;
-           }
-          
-           return acc;
-        }, '')
+            } else {
+                acc += `<th class="sticky-col forecast-col forecast-col--${index - dates.length}">${curr}</th>`;
+            }
+            
+            return acc;
+        }, '');
+
+        const headersWithLabelHtml = `
+            <tr>
+                <th rowspan="2" colspan="1" class="sticky-col sku-col">
+                    <input class="form-check-input label-toggle label-toggle-all" type="checkbox" value="" onclick="handleCheckAll(this)">
+                    SKU
+                </th>
+                <th rowspan="1" colspan="${dates.length}">
+                    Orders
+                </th>
+                <th rowspan="1" colspan="${forecastDates.length}" class="sticky-col forecast-header-col">
+                    Forecast
+                </th>
+            </tr>
+                ${headersHtml}
+            <tr>
+            </tr>`;
 
         const rowsHtml = Object.keys(skuByDate).reduce((acc, curr, index) => {
-            const forecast = 0; // todo;
             acc += `
                 <tr>
                     <td class="sticky-col sku-col fw-bold">
-                        <input class="form-check-input label-toggle" type="checkbox" value="" onclick="handleCheckboxClick(this, ${index})">
+                        <input class="form-check-input label-toggle" type="checkbox" value="" onclick="handleCheckboxClick(this, ${index})" ${window.chartState[index] ? 'checked' : ''}>
                         ${curr}
                     </td>
-                    ${(skuByDate[curr]).map(d => `<td><span class="fw-normal">${d}</td>`).join('')}
+                    ${(skuByDate[curr]).map((d, index) => {
+                        if (index < dates.length) {
+                            return `<td><span class="fw-normal">${d}</td>`;
+                        }
+                        return `<td class="sticky-col forecast-col forecast-col--${index - dates.length}"><span>${d}</td>`;
+                    }).join('')}
                 </tr>`.replace(/\s+/g, ' ');
             return acc;
         }, '');
 
-        table.querySelector('thead tr').innerHTML = headersHtml;
+        table.querySelector('thead').innerHTML = headersWithLabelHtml;
         table.querySelector('tbody').innerHTML = rowsHtml;
     }
 
-    function handleCheckboxClick(checkbox, index) {
-        window.chart.setDatasetVisibility(index, checkbox.checked);
-        window.chart.setDatasetVisibility(index + 20, checkbox.checked);
+    function handleCheckboxClick(checkbox, index, skipUpdate) {
+        let checkboxStatus = checkbox.checked;
+
+        // Set visibility of orders graph
+        window.chart.setDatasetVisibility(index, checkboxStatus);
+
+        // Set visibility of forecast graph
+        window.chart.setDatasetVisibility(index + 20, checkboxStatus);
+
+        // Set color of checkbox
+        if (checkboxStatus) {
+            checkbox.style.backgroundColor = colors[index];
+            checkbox.style.borderColor = colors[index];
+        } else {
+            checkbox.style.backgroundColor = '';
+            checkbox.style.borderColor = '';
+        }
+
+        // Set global status
+        window.chartState[index] = checkboxStatus;
+
+        if (!skipUpdate) {
+            
+            window.chart.update();
+        }
+    }
+
+    function handleCheckAll(checkbox) {
+        const checkboxes = document.querySelectorAll('.form-check-input:not(.label-toggle-all)');
+        const checkboxStatus = checkbox.checked;
+        const skipUpdate = true;
+        _.forEach(checkboxes, (checkbox, index) => {
+            checkbox.checked = checkboxStatus;
+            handleCheckboxClick(checkbox, index, skipUpdate);
+        })
+
         window.chart.update();
     }
 
@@ -206,8 +258,6 @@
         return chart;
     }
 
-
-
     window.addEventListener('load', function() {
         const orderproducts = {{ orderproducts | tojson }}
         const forecasts = {{ forecasts | tojson }}
@@ -216,15 +266,17 @@
         const dates = _.sortBy(_.uniq(_.map(orderproducts, 'date')));
         const initDate = '2020-01';
         let currChart = null;
+
+        // Init
         initDatePicker(dates, '2020-01');
+        window.chartState = _.times(skus.length, _.constant(false));
+        window.chartState[0] = true;
         currChart = updateData(orderproducts, skus, dates, initDate, currChart, forecasts['arima'])
         
         const startDate = document.getElementById('startDate');
         startDate.addEventListener('change', function(e) {
             currChart = updateData(orderproducts, skus, dates, e.target.value, currChart, forecasts['arima'])
         });
-
-        document.querySelector('#myTable tbody tr:nth-child(1) input.form-check-input').click();
     });
 </script>
 

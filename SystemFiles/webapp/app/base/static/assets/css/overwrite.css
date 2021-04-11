@@ -8,15 +8,66 @@ th.sticky-col {
     background-color: white;
 }
 
+table {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+th {
+    text-align: center;
+    vertical-align: middle;
+}
+
+th.sku-col {
+    text-align: left;
+}
+
 .sku-col {
     width: 200px;
     min-width: 200px;
     max-width: 200px;
     left: 0px;
+    margin-right: 1px;
+    border-right: 1px solid #E5E7EB;
+    background-color: #f8f8f8;
+}
+
+.forecast-col {
+    width: 90px;
+    min-width: 90px;
+    max-width: 90px;
+}
+
+.forecast-header-col {
+    width: 270px;
+    min-width: 270px;
+    max-width: 270px;
+    right: 0px;
+}
+
+th.forecast-header-col,
+th.forecast-col,
+td.forecast-col,
+th.sku-col,
+td.sku-col {
+    background-color: #f8f8f8;
+}
+
+.forecast-col--0 {
+    right: 180px;
+}
+
+.forecast-col--1 {
+    right: 90px;
+}
+
+.forecast-col--2 {
+    right: 0px;
 }
 
 .wrapper {
     overflow-x: auto;
+    overflow-y: hidden;
     position: relative;
     white-space: nowrap;
 }
