@@ -53,23 +53,43 @@
           </a>
         </li>
         <li role="separator" class="dropdown-divider mt-4 mb-3 border-black"></li>
-        <li class="nav-item {% if 'smart-procurement' in segment %} active {% endif %}">
-          <a href="/smart-procurement" class="nav-link">
-            <span class="sidebar-icon"><span class="fab fa-think-peaks"></span></span>
-            <span class="sidebar-text">Smart Procurement</span>
-          </a>
+        <li class="nav-item">
+          <span
+            class="nav-link collapsed  d-flex justify-content-between align-items-center"
+            data-bs-toggle="collapse" data-bs-target="#submenu-pages-forecasting" aria-expanded="true">
+            <span>
+              <span class="sidebar-icon"><span class="fab fa-think-peaks"></span></span>
+              <span class="sidebar-text">Order Forecasting</span>
+            </span>
+            <span class="link-arrow"><span class="fas fa-chevron-right"></span></span>
+          </span>
+          <div class="multi-level collapse show" role="list"
+            id="submenu-pages-forecasting" aria-expanded="false">
+            <ul class="flex-column nav">
+              <li class="nav-item {% if 'order-forecasting' in segment %} active {% endif %}">
+                <a class="nav-link" href="/order-forecasting">
+                  <span class="sidebar-text">Forecast</span>
+                </a>
+              </li>
+              <li class="nav-item {% if 'order-forecasting-accuracy' in segment %} active {% endif %}">
+                <a class="nav-link" href="/accuracy-monitoring">
+                  <span class="sidebar-text">Accuracy Monitoring</span>
+                </a>
+              </li>
+            </ul>
+          </div>
         </li>
         <li class="nav-item">
           <span
             class="nav-link collapsed  d-flex justify-content-between align-items-center"
-            data-bs-toggle="collapse" data-bs-target="#submenu-pages">
+            data-bs-toggle="collapse" data-bs-target="#submenu-pages" aria-expanded="true">
             <span>
               <span class="sidebar-icon"><span class="fas fa-brain"></span></span>
               <span class="sidebar-text">Data Discovery</span>
             </span>
             <span class="link-arrow"><span class="fas fa-chevron-right"></span></span>
           </span>
-          <div class="multi-level collapse " role="list"
+          <div class="multi-level collapse show" role="list"
             id="submenu-pages" aria-expanded="false">
             <ul class="flex-column nav">
               <li class="nav-item {% if 'analysis-mba' in segment %} active {% endif %}">

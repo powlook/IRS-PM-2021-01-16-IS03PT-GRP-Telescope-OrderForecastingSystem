@@ -36,9 +36,9 @@ def inventory():
     orders = Order.query.limit(5).all()
     return render_template( 'inventory.html', orders=orders, segment='inventory', title="Inventory")
 
-@blueprint.route('/smart-procurement', methods=['GET'])
+@blueprint.route('/order-forecasting', methods=['GET'])
 @login_required
-def smart_procurement():
+def order_forecasting():
     forecastArima = ForecastArima.serialize_list(ForecastArima.query.all())
     forecastSarima = ForecastSarima.serialize_list(ForecastSarima.query.all())
     forecastLSTM = ForecastLSTM.serialize_list(ForecastLSTM.query.all())
@@ -61,8 +61,7 @@ def smart_procurement():
         }
         formatted_op.append(p)
 
-    return render_template('smart-procurement.html', orderproducts=formatted_op, forecasts=forecasts, segment='smart-procurement', title="Smart Procurement")
-
+    return render_template('order-forecasting.html', orderproducts=formatted_op, forecasts=forecasts, segment='order-forecasting', title="Order Forecasting")
 
 ### API
 @blueprint.route('/api/orders', methods=['GET'])
