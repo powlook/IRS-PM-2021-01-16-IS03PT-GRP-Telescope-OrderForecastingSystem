@@ -63,6 +63,91 @@ def order_forecasting():
 
     return render_template('order-forecasting.html', orderproducts=formatted_op, forecasts=forecasts, segment='order-forecasting', title="Order Forecasting")
 
+def calculate_diff(forecast):
+    max = 0
+    for data in forecast:
+        diff = abs(data['predict'])
+        if diff > max:
+            max = diff
+    return max
+
+def calculate_score(diff, rmse):
+    return rmse - diff
+
+def get_min(obj):
+    min = {
+        'model': '',
+        'value': 100
+    }
+    for key, val in obj.items():
+        if (val < min['value']):
+            min['value'] = val
+            min['model'] = key
+    
+    return min
+
+def get_max(obj):
+    max = {
+        'model': '',
+        'value': 0
+    }
+    for key, val in obj.items():
+        if (val > max['value']):
+            max['value'] = val
+            max['model'] = key
+
+    return max
+
+@blueprint.route('/accuracy-monitoring', methods=['GET'])
+@login_required
+def accuracy_monitoring():
+    forecastArima = ForecastArima.serialize_list(ForecastArima.query.all())
+    forecastSarima = ForecastSarima.serialize_list(ForecastSarima.query.all())
+    forecastLSTM = ForecastLSTM.serialize_list(ForecastLSTM.query.all())
+    forecastRollingMA = ForecastRollingMA.serialize_list(ForecastRollingMA.query.all())
+    forecasts = {
+        'ARIMA': forecastArima,
+        'SARIMA': forecastSarima,
+        'LSTM': forecastLSTM,
+        'Rolling MA': forecastRollingMA
+    }
+
+    accuracy_diff = {
+        'ARIMA': calculate_diff(forecastArima),
+        'SARIMA': calculate_diff(forecastSarima),
+        'LSTM': calculate_diff(forecastLSTM),
+        'Rolling MA': calculate_diff(forecastRollingMA)
+    }
+
+    accuracy_rmse = {
+        'ARIMA': 3,
+        'SARIMA': 2,
+        'LSTM': 15,
+        'Rolling MA': 2
+    }
+
+    accuracy_overall = {
+        'ARIMA': calculate_score(accuracy_diff['ARIMA'], accuracy_rmse['ARIMA']),
+        'SARIMA':  calculate_score(accuracy_diff['SARIMA'], accuracy_rmse['SARIMA']),
+        'LSTM': calculate_score(accuracy_diff['LSTM'], accuracy_rmse['LSTM']),
+        'Rolling MA': calculate_score(accuracy_diff['Rolling MA'], accuracy_rmse['Rolling MA'])
+    }  
+
+    recommended = {
+        'DIFF': get_min(accuracy_diff),
+        'RMSE': get_max(accuracy_rmse),
+        'OVERALL': get_max(accuracy_overall),
+    }
+
+    return render_template('accuracy-monitoring.html',
+        forecasts=forecasts,
+        accuracy_diff=accuracy_diff,
+        accuracy_rmse=accuracy_rmse,
+        recommended=recommended,
+        segment='accuracy-monitoring',
+        title="Accuracy Monitoring")
+
+
 ### API
 @blueprint.route('/api/orders', methods=['GET'])
 @login_required

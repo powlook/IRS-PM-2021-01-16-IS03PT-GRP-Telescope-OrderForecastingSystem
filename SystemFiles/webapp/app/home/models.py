@@ -59,6 +59,7 @@ class ForecastArima(db.Model, Serializer):
     test = Column(Integer)
     predict = Column(Integer)
     item = Column(Text, primary_key=True)
+    rmse = Column(Float)
 
     def __repr__(self):
         return str(self.month + '_' + self.item)
@@ -80,6 +81,7 @@ class ForecastSarima(db.Model, Serializer):
     test = Column(Integer)
     predict = Column(Integer)
     item = Column(Text, primary_key=True)
+    rmse = Column(Float)
 
     def __repr__(self):
         return str(self.month + '_' + self.item)
@@ -95,6 +97,7 @@ class ForecastRollingMA(db.Model, Serializer):
     test = Column(Integer)
     predict = Column(Integer)
     item = Column(Text, primary_key=True)
+    rmse = Column(Float)
 
     def __repr__(self):
         return str(self.month + '_' + self.item)
@@ -110,6 +113,7 @@ class ForecastLSTM(db.Model, Serializer):
     test = Column(Integer)
     predict = Column(Integer)
     item = Column(Text, primary_key=True)
+    rmse = Column(Float)
 
     def __repr__(self):
         return str(self.month + '_' + self.item)
