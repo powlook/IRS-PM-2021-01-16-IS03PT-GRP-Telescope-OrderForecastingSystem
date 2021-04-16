@@ -21,7 +21,8 @@ def index():
 @blueprint.route('/orders', methods=['GET'])
 @login_required
 def orders():
-    orders = Order.query.limit(5).all()
+    page = request.args.get('page', 1, type=int)
+    orders = Order.query.paginate(page=page, per_page=10)
     return render_template( 'orders.html', orders=orders, segment='orders', title="Orders")
 
 @blueprint.route('/products', methods=['GET'])
