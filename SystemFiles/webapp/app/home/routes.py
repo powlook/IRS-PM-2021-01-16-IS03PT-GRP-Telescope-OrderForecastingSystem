@@ -4,7 +4,7 @@ Copyright (c) 2019 - present AppSeed.us
 """
 
 from app.home import blueprint
-from app.home.models import Order, OrderProduct, ForecastArima, ForecastSarima, ForecastLSTM, ForecastRollingMA
+from app.home.models import Order, Product, OrderProduct, ForecastArima, ForecastSarima, ForecastLSTM, ForecastRollingMA
 from flask import render_template, redirect, url_for, request, jsonify
 from flask_login import login_required, current_user
 from app import login_manager
@@ -28,8 +28,9 @@ def orders():
 @blueprint.route('/products', methods=['GET'])
 @login_required
 def products():
-    orders = Order.query.limit(5).all()
-    return render_template( 'products.html', orders=orders, segment='products', title="Products")
+    page = request.args.get('page', 1, type=int)
+    products = Product.query.paginate(page=page, per_page=10)
+    return render_template( 'products.html', products=products, segment='products', title="Products")
 
 @blueprint.route('/inventory', methods=['GET'])
 @login_required

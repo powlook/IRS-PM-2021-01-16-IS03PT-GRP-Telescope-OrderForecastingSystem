@@ -32,6 +32,24 @@ class Order(db.Model, Serializer):
         d = Serializer.serialize(self)
         return d
 
+class Product(db.Model, Serializer):
+    __tablename__ = 'products'
+
+    id = Column(Integer, primary_key=True)
+    title = Column(Text)
+    sku = Column(Text)
+    price_usd = Column(Float)
+    category = Column(Text)
+    tags = Column(Text)
+    created_at = Column(DateTime)
+
+    def __repr__(self):
+        return str(self.id)
+
+    def serialize(self):
+        d = Serializer.serialize(self)
+        return d
+
 class OrderProduct(db.Model, Serializer):
     __tablename__ = 'orders_products_v2'
 
