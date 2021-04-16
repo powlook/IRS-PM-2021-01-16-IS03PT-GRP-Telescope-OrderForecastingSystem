@@ -149,6 +149,14 @@ def accuracy_monitoring():
         segment='accuracy-monitoring',
         title="Accuracy Monitoring")
 
+@blueprint.route('/analysis-mba', methods=['GET'])
+@login_required
+def analysis_mba():
+
+    return render_template('analysis-mba.html',
+        segment='analysis-mba',
+        title="Market Basket Analysis")
+
 
 ### API
 @blueprint.route('/api/orders', methods=['GET'])

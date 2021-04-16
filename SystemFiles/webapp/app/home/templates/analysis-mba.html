@@ -1,0 +1,39 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Market Basket Analysis {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
+  <div class="d-block mb-4 mb-md-0">
+    <p class="mb-0">Discover association between products</p>
+  </div>
+</div>
+<div class="card card-body shadow-sm table-wrapper table-responsive">
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>Users who bought</th>
+        <th>Also bought</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a href="#" class="fw-bold">Product A</a></td>
+        <td><span class="fw-normal">Product A1, A2, A3</span></td>
+      </tr>
+      <tr>
+        <td><a href="#" class="fw-bold">Product A</a></td>
+        <td><span class="fw-normal">Product A1, A2, A3</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}
