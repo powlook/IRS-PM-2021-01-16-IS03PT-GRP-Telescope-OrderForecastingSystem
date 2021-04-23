@@ -14,7 +14,6 @@ import sqlalchemy as sa
 @blueprint.route('/index')
 @login_required
 def index():
-
     return render_template('dashboard.html', segment='index')
 
 ### Views
@@ -68,13 +67,21 @@ def order_forecasting():
 def calculate_diff(forecast):
     max = 0
     for data in forecast:
-        diff = abs(data['predict'])
+        diff = abs(data['predict'] - data['test'])
         if diff > max:
             max = diff
     return max
 
+def calculate_rmse(forecast):
+    sum = 0
+    for data in forecast:
+        sum += (data['predict'] - data['test']) ** 2
+    
+    avg = sum / len(data)
+    return round(avg ** (1/2), 2)
+
 def calculate_score(diff, rmse):
-    return rmse - diff
+    return rmse + diff
 
 def get_min(obj):
     min = {
@@ -122,10 +129,10 @@ def accuracy_monitoring():
     }
 
     accuracy_rmse = {
-        'ARIMA': 3,
-        'SARIMA': 2,
-        'LSTM': 15,
-        'Rolling MA': 2
+        'ARIMA': calculate_rmse(forecastArima),
+        'SARIMA': calculate_rmse(forecastSarima),
+        'LSTM': calculate_rmse(forecastLSTM),
+        'Rolling MA': calculate_rmse(forecastRollingMA)
     }
 
     accuracy_overall = {
@@ -137,8 +144,8 @@ def accuracy_monitoring():
 
     recommended = {
         'DIFF': get_min(accuracy_diff),
-        'RMSE': get_max(accuracy_rmse),
-        'OVERALL': get_max(accuracy_overall),
+        'RMSE': get_min(accuracy_rmse),
+        'OVERALL': get_min(accuracy_overall),
     }
 
     return render_template('accuracy-monitoring.html',

@@ -25,11 +25,13 @@
 ## How to use it
 
 ```bash
-$ git clone https://github.com/app-generator/flask-dashboard-volt.git
-$ cd flask-dashboard-volt
+$ # Navigate to the webapp folder
+$ (Unix/Mac) cd SystemFiles/webapp
+$ (Windows) cd "SystemFiles\webapp"
+$ (Powershell) cd "SystemFiles\webapp"
 $
-$ # Install modules - SQLite Database
-$ pip3 install -r requirements-mysql.txt
+$ # Install modules
+$ pip3 install -r requirements.txt
 $
 $ # Set the FLASK_APP environment variable
 $ (Unix/Mac) export FLASK_APP=run.py
@@ -37,9 +39,9 @@ $ (Windows) set FLASK_APP=run.py
 $ (Powershell) $env:FLASK_APP = ".\run.py"
 $
 $ # Set up the DEBUG environment
-$ # (Unix/Mac) export FLASK_ENV=development
-$ # (Windows) set FLASK_ENV=development
-$ # (Powershell) $env:FLASK_ENV = "development"
+$ (Unix/Mac) export FLASK_ENV=development
+$ (Windows) set FLASK_ENV=development
+$ (Powershell) $env:FLASK_ENV = "development"
 $
 $ # Start the application (development mode)
 $ # --host=0.0.0.0 - expose the app on all network interfaces (default 127.0.0.1)
