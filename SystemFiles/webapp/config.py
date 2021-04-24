@@ -17,12 +17,12 @@ class Config(object):
     # SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'db.sqlite3')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_DATABASE_URI = '{}://{}:{}@{}:{}/{}'.format(
-        config( 'DB_ENGINE'   , default='mysql'    ),
-        config( 'DB_USERNAME' , default='iss'       ),
-        config( 'DB_PASS'     , default='6Jg3bwm56xtJ2mrfNQwvsaY$'          ),
-        config( 'DB_HOST'     , default='idm5peipdsus5o.crcvo0yw3sz7.ap-southeast-1.rds.amazonaws.com'     ),
-        config( 'DB_PORT'     , default=3306            ),
-        config( 'DB_NAME'     , default='iss_project_nicole' )
+        config( 'DB_ENGINE'   , default='mysql'),
+        config( 'DB_USERNAME' , default='iss_readonly'),
+        config( 'DB_PASS'     , default='yBLEBEqUJdQzQcw3'),
+        config( 'DB_HOST'     , default='idm5peipdsus5o.crcvo0yw3sz7.ap-southeast-1.rds.amazonaws.com'),
+        config( 'DB_PORT'     , default=3306),
+        config( 'DB_NAME'     , default='iss_project' )
     )
 
 class ProductionConfig(Config):
