@@ -32,6 +32,24 @@ class Order(db.Model, Serializer):
         d = Serializer.serialize(self)
         return d
 
+class Product(db.Model, Serializer):
+    __tablename__ = 'products'
+
+    id = Column(Integer, primary_key=True)
+    title = Column(Text)
+    sku = Column(Text)
+    price_usd = Column(Float)
+    category = Column(Text)
+    tags = Column(Text)
+    created_at = Column(DateTime)
+
+    def __repr__(self):
+        return str(self.id)
+
+    def serialize(self):
+        d = Serializer.serialize(self)
+        return d
+
 class OrderProduct(db.Model, Serializer):
     __tablename__ = 'orders_products_v2'
 
@@ -59,6 +77,7 @@ class ForecastArima(db.Model, Serializer):
     test = Column(Integer)
     predict = Column(Integer)
     item = Column(Text, primary_key=True)
+    rmse = Column(String)
 
     def __repr__(self):
         return str(self.month + '_' + self.item)
@@ -72,3 +91,51 @@ class ForecastArima(db.Model, Serializer):
         d = db.engine.execute(query, limit=5)
         return d
 
+
+class ForecastSarima(db.Model, Serializer):
+    __tablename__ = 'top20forecasts_SARIMA'
+
+    month = Column(Text, primary_key=True)
+    test = Column(Integer)
+    predict = Column(Integer)
+    item = Column(Text, primary_key=True)
+    rmse = Column(String)
+
+    def __repr__(self):
+        return str(self.month + '_' + self.item)
+
+    def serialize(self):
+        d = Serializer.serialize(self)
+        return d
+
+class ForecastRollingMA(db.Model, Serializer):
+    __tablename__ = 'top20forecasts_MA'
+
+    month = Column(Text, primary_key=True)
+    test = Column(Integer)
+    predict = Column(Integer)
+    item = Column(Text, primary_key=True)
+    rmse = Column(String)
+
+    def __repr__(self):
+        return str(self.month + '_' + self.item)
+
+    def serialize(self):
+        d = Serializer.serialize(self)
+        return d
+
+class ForecastLSTM(db.Model, Serializer):
+    __tablename__ = 'top20forecasts_LSTM'
+
+    month = Column(Text, primary_key=True)
+    test = Column(Integer)
+    predict = Column(Integer)
+    item = Column(Text, primary_key=True)
+    rmse = Column(String)
+
+    def __repr__(self):
+        return str(self.month + '_' + self.item)
+
+    def serialize(self):
+        d = Serializer.serialize(self)
+        return d

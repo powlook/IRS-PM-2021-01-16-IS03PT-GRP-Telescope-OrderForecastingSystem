@@ -1,106 +1,78 @@
 {% extends "layouts/base.html" %}
 
-{% block title %} Products {% endblock %} 
+{% block title %} Products {% endblock %}
 
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}{% endblock stylesheets %}
 
 {% block content %}
 
-  <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
-      <div class="d-block mb-4 mb-md-0">
-          <nav aria-label="breadcrumb" class="d-none d-md-inline-block">
-              <ol class="breadcrumb breadcrumb-dark breadcrumb-transparent">
-                <li class="breadcrumb-item"><a href="#"><span class="fas fa-home"></span></a></li>
-                <li class="breadcrumb-item"><a href="#">Volt</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Products</li>
-              </ol>
-          </nav>
-          <p class="mb-0">Your web analytics dashboard template.</p>
-      </div>
-      <div class="btn-toolbar mb-2 mb-md-0">
-          <div class="btn-group">
-              <button type="button" class="btn btn-sm btn-outline-primary">Share</button>
-              <button type="button" class="btn btn-sm btn-outline-primary">Export</button>
-          </div>
-      </div>
+<div class="card card-body shadow-sm table-wrapper table-responsive mt-4">
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>SKU</th>
+        <th>Title</th>
+        <th>Category</th>
+        <th>Tags</th>
+        <th>Price</th>
+        <th>Created At</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for product in products.items %}
+      <tr>
+        <td><a href="#" class="fw-bold">{{ product.sku }}</a></td>
+        <td><span class="fw-normal">{{ product.title }}</span></td>
+        <td><span class="fw-normal">{{ product.category }}</span></td>
+        <td><span class="fw-normal">{{ product.tags }}</span></td>
+        <td><span class="fw-normal">{{ product.price_usd }}</span></td>
+        <td><span class="fw-normal">{{ product.created_at }}</span></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+
+  <!-- Pagination Links-->
+  <div class="card-footer px-3 bproduct-0 d-flex align-items-center justify-content-between">
+    <nav aria-label="Page navigation example">
+      <ul class="pagination mb-0">
+        <li class="page-item">
+          <a class="page-link"
+            href="{{ url_for('home_blueprint.products', page=products.prev_num) }}"
+            {% if products.page == 1 %}disabled{% endif %}>
+            Previous
+          </a>
+        </li>
+        {% for page_num in products.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+          {% if page_num %}
+          <!-- Check for the active page and set the link to "Active"-->
+            {% if products.page == page_num %}
+              <li class="page-item active">
+                <a class="page-link" href="{{ url_for('home_blueprint.products', page=page_num) }}">{{ page_num }}</a>
+              </li>
+            {% else %}
+              <li class="page-item">
+                <a class="page-link" href="{{ url_for('home_blueprint.products', page=page_num) }}">{{ page_num }}</a>
+              </li>
+            {% endif %}
+          {% else %}
+            <li class="page-item"><div class="page-link">...</div></li>
+          {% endif %}
+        {% endfor %}
+        <li class="page-item">
+          <a class="page-link"
+            href="{{ url_for('home_blueprint.products', page=products.next_num) }}"
+            {% if products.page == products.pages %}disabled{% endif %}>
+            Next
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <div class="fw-bold small d-none d-lg-block">Total Records <b>{{ products.total }}</b>, Showing page <b>{{ products.page }}</b> out of <b>{{ products.pages }}</b> pages</div>
   </div>
-  <div class="table-settings mb-4">
-      <div class="row align-items-center justify-content-between">
-          <div class="col col-md-6 col-lg-3 col-xl-4">
-              <div class="input-group">
-                  <span class="input-group-text" id="basic-addon2"><span class="fas fa-search"></span></span>
-                  <input type="text" class="form-control" id="exampleInputIconLeft" placeholder="Search" aria-label="Search" aria-describedby="basic-addon2">
-              </div>
-          </div>
-          <div class="col-4 col-md-2 col-xl-1 ps-md-0 text-right">
-              <div class="btn-group">
-                  <button class="btn btn-link text-dark dropdown-toggle dropdown-toggle-split m-0 p-1" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      <span class="icon icon-sm icon-gray pt-1">
-                          <span class="fas fa-cog"></span>
-                      </span>
-                      <span class="sr-only">Toggle Dropdown</span>
-                  </button>
-                  <div class="dropdown-menu dropdown-menu-xs dropdown-menu-end pb-0">
-                      <span class="small ps-3 fw-bold text-dark">Show</span>
-                      <a class="dropdown-item d-flex fw-bold" href="#">10 <span class="icon icon-small ms-auto"><span class="fas fa-check"></span></span></a>
-                      <a class="dropdown-item fw-bold" href="#">20</a>
-                      <a class="dropdown-item fw-bold" href="#">30</a>
-                  </div>
-              </div>
-          </div>
-      </div>
-  </div>
-  <div class="card card-body shadow-sm table-wrapper table-responsive">
-      <table class="table table-hover">
-          <thead>
-              <tr>
-                  <th>Order #</th>
-                  <th>Items</th>
-                  <th>Total Price</th>
-                  <th>Created Date</th>
-              </tr>
-          </thead>
-          <tbody>
-            {% for order in orders %}
-            <tr>
-                <td><a href="#" class="fw-bold">{{ order.id }}</a></td>    
-                <td><span class="fw-normal">{{ order.line_items }}</span></td>  
-                <td><span class="fw-bold">${{ order.total_price }}</span></td>
-                <td><span class="fw-normal">{{ order.created_at }}</span></td>
-            </tr>
-            {% endfor %}
-          </tbody>
-      </table>
-      <div class="card-footer px-3 border-0 d-flex align-items-center justify-content-between">
-          <nav aria-label="Page navigation example">
-              <ul class="pagination mb-0">
-                  <li class="page-item">
-                      <a class="page-link" href="#">Previous</a>
-                  </li>
-                  <li class="page-item">
-                      <a class="page-link" href="#">1</a>
-                  </li>
-                  <li class="page-item active">
-                      <a class="page-link" href="#">2</a>
-                  </li>
-                  <li class="page-item">
-                      <a class="page-link" href="#">3</a>
-                  </li>
-                  <li class="page-item">
-                      <a class="page-link" href="#">4</a>
-                  </li>
-                  <li class="page-item">
-                      <a class="page-link" href="#">5</a>
-                  </li>
-                  <li class="page-item">
-                      <a class="page-link" href="#">Next</a>
-                  </li>
-              </ul>
-          </nav>
-          <div class="fw-bold small d-none d-lg-block">Showing <b>5</b> out of <b>25</b> entries</div>
-      </div>
-  </div>
+</div>
 
 {% endblock content %}
 

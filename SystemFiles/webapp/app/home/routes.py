@@ -4,7 +4,7 @@ Copyright (c) 2019 - present AppSeed.us
 """
 
 from app.home import blueprint
-from app.home.models import Order, OrderProduct, ForecastArima
+from app.home.models import Order, Product, OrderProduct, ForecastArima, ForecastSarima, ForecastLSTM, ForecastRollingMA
 from flask import render_template, redirect, url_for, request, jsonify
 from flask_login import login_required, current_user
 from app import login_manager
@@ -14,21 +14,22 @@ import sqlalchemy as sa
 @blueprint.route('/index')
 @login_required
 def index():
-
     return render_template('dashboard.html', segment='index')
 
 ### Views
 @blueprint.route('/orders', methods=['GET'])
 @login_required
 def orders():
-    orders = Order.query.limit(5).all()
+    page = request.args.get('page', 1, type=int)
+    orders = Order.query.paginate(page=page, per_page=10)
     return render_template( 'orders.html', orders=orders, segment='orders', title="Orders")
 
 @blueprint.route('/products', methods=['GET'])
 @login_required
 def products():
-    orders = Order.query.limit(5).all()
-    return render_template( 'products.html', orders=orders, segment='products', title="Products")
+    page = request.args.get('page', 1, type=int)
+    products = Product.query.paginate(page=page, per_page=10)
+    return render_template( 'products.html', products=products, segment='products', title="Products")
 
 @blueprint.route('/inventory', methods=['GET'])
 @login_required
@@ -36,15 +37,19 @@ def inventory():
     orders = Order.query.limit(5).all()
     return render_template( 'inventory.html', orders=orders, segment='inventory', title="Inventory")
 
-@blueprint.route('/smart-procurement', methods=['GET'])
+@blueprint.route('/order-forecasting', methods=['GET'])
 @login_required
-def smart_procurement():
+def order_forecasting():
     forecastArima = ForecastArima.serialize_list(ForecastArima.query.all())
-    # forecastArima = ForecastArima.query.all()
-    # forecastArima = ForecastArima.query.all()
-    # forecastArima = ForecastArima.query.all()
+    forecastSarima = ForecastSarima.serialize_list(ForecastSarima.query.all())
+    forecastLSTM = ForecastLSTM.serialize_list(ForecastLSTM.query.all())
+    forecastRollingMA = ForecastRollingMA.serialize_list(ForecastRollingMA.query.all())
     forecasts = {
+        'recommended': forecastLSTM,
         'arima': forecastArima,
+        'sarima': forecastSarima,
+        'lstm': forecastLSTM,
+        'rolling-ma': forecastRollingMA
     }
     orderproducts = OrderProduct.group_by_product()
 
@@ -57,7 +62,107 @@ def smart_procurement():
         }
         formatted_op.append(p)
 
-    return render_template('smart-procurement.html', orderproducts=formatted_op, forecasts=forecasts, segment='smart-procurement', title="Smart Procurement")
+    return render_template('order-forecasting.html', orderproducts=formatted_op, forecasts=forecasts, segment='order-forecasting', title="Order Forecasting")
+
+def calculate_diff(forecast):
+    max = 0
+    for data in forecast:
+        diff = abs(data['predict'] - data['test'])
+        if diff > max:
+            max = diff
+    return max
+
+def calculate_rmse(forecast):
+    sum = 0
+    for data in forecast:
+        sum += (data['predict'] - data['test']) ** 2
+    
+    avg = sum / len(data)
+    return round(avg ** (1/2), 2)
+
+def calculate_score(diff, rmse):
+    return rmse + diff
+
+def get_min(obj):
+    min = {
+        'model': '',
+        'value': 100
+    }
+    for key, val in obj.items():
+        if (val < min['value']):
+            min['value'] = val
+            min['model'] = key
+    
+    return min
+
+def get_max(obj):
+    max = {
+        'model': '',
+        'value': 0
+    }
+    for key, val in obj.items():
+        if (val > max['value']):
+            max['value'] = val
+            max['model'] = key
+
+    return max
+
+@blueprint.route('/accuracy-monitoring', methods=['GET'])
+@login_required
+def accuracy_monitoring():
+    forecastArima = ForecastArima.serialize_list(ForecastArima.query.all())
+    forecastSarima = ForecastSarima.serialize_list(ForecastSarima.query.all())
+    forecastLSTM = ForecastLSTM.serialize_list(ForecastLSTM.query.all())
+    forecastRollingMA = ForecastRollingMA.serialize_list(ForecastRollingMA.query.all())
+    forecasts = {
+        'ARIMA': forecastArima,
+        'SARIMA': forecastSarima,
+        'LSTM': forecastLSTM,
+        'Rolling MA': forecastRollingMA
+    }
+
+    accuracy_diff = {
+        'ARIMA': calculate_diff(forecastArima),
+        'SARIMA': calculate_diff(forecastSarima),
+        'LSTM': calculate_diff(forecastLSTM),
+        'Rolling MA': calculate_diff(forecastRollingMA)
+    }
+
+    accuracy_rmse = {
+        'ARIMA': calculate_rmse(forecastArima),
+        'SARIMA': calculate_rmse(forecastSarima),
+        'LSTM': calculate_rmse(forecastLSTM),
+        'Rolling MA': calculate_rmse(forecastRollingMA)
+    }
+
+    accuracy_overall = {
+        'ARIMA': calculate_score(accuracy_diff['ARIMA'], accuracy_rmse['ARIMA']),
+        'SARIMA':  calculate_score(accuracy_diff['SARIMA'], accuracy_rmse['SARIMA']),
+        'LSTM': calculate_score(accuracy_diff['LSTM'], accuracy_rmse['LSTM']),
+        'Rolling MA': calculate_score(accuracy_diff['Rolling MA'], accuracy_rmse['Rolling MA'])
+    }  
+
+    recommended = {
+        'DIFF': get_min(accuracy_diff),
+        'RMSE': get_min(accuracy_rmse),
+        'OVERALL': get_min(accuracy_overall),
+    }
+
+    return render_template('accuracy-monitoring.html',
+        forecasts=forecasts,
+        accuracy_diff=accuracy_diff,
+        accuracy_rmse=accuracy_rmse,
+        recommended=recommended,
+        segment='accuracy-monitoring',
+        title="Accuracy Monitoring")
+
+@blueprint.route('/analysis-mba', methods=['GET'])
+@login_required
+def analysis_mba():
+
+    return render_template('analysis-mba.html',
+        segment='analysis-mba',
+        title="Market Basket Analysis")
 
 
 ### API
