@@ -1,0 +1,153 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Order Forecasting {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
+  <div class="d-block mb-4 mb-md-0">
+    <p class="mb-0">Continually monitor accuracy as more data is gathered.</p>
+  </div>
+</div>
+<div class="row justify-content-md-center">
+  <div class="col-12 col-sm-6 col-xl-4 mb-4">
+    <div class="card border-light shadow-sm">
+      <div class="card-body">
+        <div class="row d-block d-xl-flex align-items-center">
+          <div class="col-12 col-xl-5 text-xl-center mb-3 mb-xl-0 d-flex align-items-center justify-content-xl-center">
+            <button type="button" class="icon icon-shape icon-md icon-shape-purple rounded mr-4" data-bs-toggle="tooltip" data-bs-placement="top" title="Max absolute difference">
+              <span class="far fa-plus-square"></span>
+            </button>
+          </div>
+          <div class="col-12 col-xl-7 px-xl-0">
+            <div class="d-none d-sm-block">
+              <h2 class="h5">Best by MaxE</h2>
+              <h3 class="mb-1">+/-{{ recommended['DIFF']['model'] }}</h3>
+            </div>
+            <small>{{ recommended['DIFF']['value'] }}</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 col-sm-6 col-xl-4 mb-4">
+    <div class="card border-light shadow-sm">
+      <div class="card-body">
+        <div class="row d-block d-xl-flex align-items-center">
+          <div class="col-12 col-xl-5 text-xl-center mb-3 mb-xl-0 d-flex align-items-center justify-content-xl-center">
+            <button type="button" class="icon icon-shape icon-md icon-shape-secondary rounded mr-4" data-bs-toggle="tooltip" data-bs-placement="top" title="Root Mean Square Error">
+              <span class="fas fa-calculator"></span>
+            </button>
+          </div>
+          <div class="col-12 col-xl-7 px-xl-0">
+            <div class="d-none d-sm-block">
+              <h2 class="h5">Best by RMSE</h2>
+              <h3 class="mb-1">{{ recommended['RMSE']['model'] }}</h3>
+            </div>
+            <small>{{ recommended['RMSE']['value'] }}</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 col-sm-6 col-xl-4 mb-4">
+    <div class="card border-light shadow-sm">
+      <div class="card-body">
+        <div class="row d-block d-xl-flex align-items-center">
+          <div class="col-12 col-xl-5 text-xl-center mb-3 mb-xl-0 d-flex align-items-center justify-content-xl-center">
+            <button type="button" class="icon icon-shape icon-md icon-shape-success rounded mr-4" data-bs-toggle="tooltip" data-bs-placement="top" title="Calculated by (RMSE - Diff)">
+              <span class="fas fa-check-double"></span>
+            </button>
+          </div>
+          <div class="col-12 col-xl-7 px-xl-0">
+            <div class="d-none d-sm-block">
+              <h2 class="h5">Recommendation</h2>
+              <h3 class="mb-1">{{ recommended['OVERALL']['model'] }}</h3>
+            </div>
+            <small>Score: {{ recommended['OVERALL']['value'] }}</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="accordion" id="accordion-accuracy">
+  {% for i in forecasts %}
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingOne">
+        <button class="accordion-button collapsed d-flex justify-content-between" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ loop.index }}" aria-controls="collapseOne">
+          <strong>{{ i }}</strong>
+          <div class="ms-auto">
+            <span class="badge rounded-pill bg-purple">Diff: (+/- {{ accuracy_diff[i] }})</span>
+            <span class="badge rounded-pill bg-secondary">RMSE: ({{ accuracy_rmse[i] }})</span>
+          </div>
+        </button>
+      </h2>
+      <div id="collapse-{{ loop.index }}" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+        <div class="accordion-body">
+          <div class="table-responsive table-accuracy">
+            <table class="table align-items-center table-flush">
+              <thead class="thead-light">
+                <tr>
+                  <th scope="col">SKU</th>
+                  <th scope="col">Month</th>
+                  <th scope="col">Actual</th>
+                  <th scope="col">Predicted</th>
+                  <th scope="col">Difference</th>
+                  <th scope="col">RMSE</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for data in forecasts[i] %}
+                <tr>
+                  <td>
+                    {{ data.item }}
+                    </th>
+                  <td>
+                    {% if data.month == 'm+1' %}
+                    2021-01
+                    {% elif data.month == 'm+2' %}
+                    2021-02
+                    {% elif data.month == 'm+3' %}
+                    2021-03
+                    {% else %}
+                    2021-04
+                    {% endif %}
+                  </td>
+                  <td>
+                    {{ data.test }}
+                  </td>
+                  <td>
+                    {{ data.predict }}
+                  </td>
+                  {% set diff = data.test - data.predict %}
+                  {% if diff == 0 %}
+                  <td class="text-success">{{ diff }}</td>
+                  {% else %}
+                  <td class="text-danger">{{ diff }}</td>
+                  {% endif %}
+                  {% if data.rmse %}
+                  <td rowspan=3>{{ data.rmse }}</td>
+                  {% endif %}
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+<script>
+
+</script>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

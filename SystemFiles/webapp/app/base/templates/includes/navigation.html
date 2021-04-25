@@ -9,19 +9,15 @@
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle pt-1 px-0" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   <div class="media d-flex align-items-center">
-                    <img class="user-avatar md-avatar rounded-circle" alt="Image placeholder" src="/static/assets/img/team/profile-picture-1.jpg">
+                    <div class="user-avatar xs-avatar bg-gray-500"><span class="text-uppercase">{{ current_user.username[0:2] }}</span></div>
                     <div class="media-body ms-2 text-dark align-items-center d-none d-lg-block">
                       <span class="mb-0 font-small fw-bold">
-                        Current User: <strong>{{ current_user.username }}</strong>
+                        User: <strong>{{ current_user.username }}</strong>
                       </span>
                     </div>
                   </div>
                 </a>
                 <div class="dropdown-menu dashboard-dropdown dropdown-menu-end mt-2 py-0">
-                    <a class="dropdown-item rounded-top fw-bold" href="/settings.html">
-                      <span class="far fa-user-circle"></span>My Profile</a>
-                    <a class="dropdown-item fw-bold" href="/settings.html"><span class="fas fa-cog"></span>Settings</a>
-                    <div role="separator" class="dropdown-divider my-0"></div>
                     <a class="dropdown-item rounded-bottom fw-bold" href="{{ url_for('base_blueprint.logout') }}">
                       <span class="fas fa-sign-out-alt text-danger"></span>Logout</a>
                 </div>
