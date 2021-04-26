@@ -4,7 +4,7 @@ Copyright (c) 2019 - present AppSeed.us
 """
 
 from app.home import blueprint
-from app.home.models import Order, Product, OrderProduct, ForecastArima, ForecastSarima, ForecastLSTM, ForecastRollingMA
+from app.home.models import Order, Product, OrderProduct, ForecastArima, ForecastSarima, ForecastLSTM, ForecastRollingMA, ForecastExpSmoothing
 from flask import render_template, redirect, url_for, request, jsonify
 from flask_login import login_required, current_user
 from app import login_manager
@@ -44,12 +44,14 @@ def order_forecasting():
     forecastSarima = ForecastSarima.serialize_list(ForecastSarima.query.all())
     forecastLSTM = ForecastLSTM.serialize_list(ForecastLSTM.query.all())
     forecastRollingMA = ForecastRollingMA.serialize_list(ForecastRollingMA.query.all())
+    forecastExpSmoothing = ForecastRollingMA.serialize_list(ForecastExpSmoothing.query.all())
     forecasts = {
         'recommended': forecastLSTM,
         'arima': forecastArima,
         'sarima': forecastSarima,
         'lstm': forecastLSTM,
-        'rolling-ma': forecastRollingMA
+        'rolling-ma': forecastRollingMA,
+        'exp-smoothing': forecastExpSmoothing,
     }
     orderproducts = OrderProduct.group_by_product()
 
@@ -164,14 +166,6 @@ def analysis_mba():
         segment='analysis-mba',
         title="Market Basket Analysis")
 
-
-### API
-@blueprint.route('/api/orders', methods=['GET'])
-@login_required
-def api_get_orders():
-    orders = Order.query.limit(5).all()
-    return jsonify(Order.serialize_list(orders))
-    # return jsonify({ 'order_id': 1, 'name': 'ABC' }, { 'order_id': 2, 'name': 'CDEF' })
 
 @blueprint.route('/<template>')
 @login_required

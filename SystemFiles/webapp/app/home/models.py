@@ -139,3 +139,19 @@ class ForecastLSTM(db.Model, Serializer):
     def serialize(self):
         d = Serializer.serialize(self)
         return d
+
+class ForecastExpSmoothing(db.Model, Serializer):
+    __tablename__ = 'top20forecasts_ExpSmoothing'
+
+    month = Column(Text, primary_key=True)
+    test = Column(Integer)
+    predict = Column(Integer)
+    item = Column(Text, primary_key=True)
+    rmse = Column(String)
+
+    def __repr__(self):
+        return str(self.month + '_' + self.item)
+
+    def serialize(self):
+        d = Serializer.serialize(self)
+        return d
