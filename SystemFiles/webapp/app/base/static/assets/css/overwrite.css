@@ -9,8 +9,29 @@
   height: 100%;
 }
 
+.card-body {
+  padding: 15px;
+}
+
 .table-wrapper-forecast {
   overflow: unset;
+}
+
+.table-wrapper-forecast th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: #fff;
+}
+
+.table-wrapper-forecast th.sku-col,
+.table-wrapper-forecast th.forecast-col {
+  z-index: 2;
+}
+
+.table-wrapper-forecast th.dates,
+.table-wrapper-forecast th.forecast-col {
+  top: 42px;
 }
 
 td.sticky-col,
@@ -77,7 +98,8 @@ td.sku-col {
 }
 
 .wrapper {
-  height: 80vh;
+  height: 30vh;
+  min-height: 250px;
   overflow-x: auto;
   overflow-y: auto;
   position: relative;
