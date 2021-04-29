@@ -75,77 +75,54 @@
   </div>
 </div>
 
-<div class="accordion" id="accordion-accuracy">
-  {% for i in forecasts %}
-    <div class="accordion-item">
-      <h2 class="accordion-header" id="headingOne">
-        <button class="accordion-button collapsed d-flex justify-content-between" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ loop.index }}" aria-controls="collapseOne">
-          <strong>{{ i }}</strong>
-          <div class="ms-auto">
-            <span class="badge rounded-pill bg-purple">Diff: (+/- {{ accuracy_diff[i] }})</span>
-            <span class="badge rounded-pill bg-secondary">RMSE: ({{ accuracy_rmse[i] }})</span>
-          </div>
-        </button>
-      </h2>
-      <div id="collapse-{{ loop.index }}" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-        <div class="accordion-body">
-          <div class="table-responsive table-accuracy">
-            <table class="table align-items-center table-flush">
-              <thead class="thead-light">
-                <tr>
-                  <th scope="col">SKU</th>
-                  <th scope="col">Month</th>
-                  <th scope="col">Actual</th>
-                  <th scope="col">Predicted</th>
-                  <th scope="col">Difference</th>
-                  <th scope="col">RMSE</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for data in forecasts[i] %}
-                <tr>
-                  <td>
-                    {{ data.item }}
-                    </th>
-                  <td>
-                    {% if data.month == 'm+1' %}
-                    2021-01
-                    {% elif data.month == 'm+2' %}
-                    2021-02
-                    {% elif data.month == 'm+3' %}
-                    2021-03
-                    {% else %}
-                    2021-04
-                    {% endif %}
-                  </td>
-                  <td>
-                    {{ data.test }}
-                  </td>
-                  <td>
-                    {{ data.predict }}
-                  </td>
-                  {% set diff = data.test - data.predict %}
-                  {% if diff == 0 %}
-                  <td class="text-success">{{ diff }}</td>
-                  {% else %}
-                  <td class="text-danger">{{ diff }}</td>
-                  {% endif %}
-                  {% if data.rmse %}
-                  <td rowspan=3>{{ data.rmse }}</td>
-                  {% endif %}
-                </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
-  {% endfor %}
+<div class="card card-body shadow-sm table-wrapper table-responsive table-wrapper-accuracy">
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th rowspan="2">SKU</th>
+        <th colspan="5">MaxE</th>
+        <th colspan="5">RMSE</th>
+      </tr>
+      <tr>
+        <th>Exp<br/>Smoothing</th>
+        <th>ARIMA</th>
+        <th>SARIMA</th>
+        <th>Rolling<br/>MA</th>
+        <th>LSTM</th>
+        <th>Exp<br/>Smoothing</th>
+        <th>ARIMA</th>
+        <th>SARIMA</th>
+        <th>Rolling<br/>MA</th>
+        <th>LSTM</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for compare in compareForecasts %}
+        {% set maxe_values = '' %}
+        {% set maxe_values = compare.ExpSm_maxe|int ~ "," ~ compare.ARIMA_maxe ~ "," ~ compare.SARIMA_maxe ~ "," ~ compare.MA_maxe ~ "," ~ compare.LSTM_maxe %}
+        {% set maxe_values = maxe_values.split(",")|map('int')|list %}
+        {% set best_maxe = maxe_values | sort | first | string %}
+        {% set rmse_values = '' %}
+        {% set rmse_values = compare.ExpSm_rmse|int ~ "," ~ compare.ARIMA_rmse ~ "," ~ compare.SARIMA_rmse ~ "," ~ compare.MA_rmse ~ "," ~ compare.LSTM_rmse %}
+        {% set rmse_values = rmse_values.split(",")|map('int')|list %}
+        {% set best_rmse = rmse_values | sort | first | string %}
+        <tr>
+          <td><a href="#" class="fw-bold">{{ compare.item }}</a></td>
+          <td><a href="#" {% if compare.ExpSm_maxe == best_maxe %}class="text-success fw-bold"{% endif %}>{{ compare.ExpSm_maxe }}</a></td>
+          <td><a href="#" {% if compare.ARIMA_maxe == best_maxe %}class="text-success fw-bold"{% endif %}>{{ compare.ARIMA_maxe }}</a></td>
+          <td><a href="#" {% if compare.SARIMA_maxe == best_maxe %}class="text-success fw-bold"{% endif %}>{{ compare.SARIMA_maxe }}</a></td>
+          <td><a href="#" {% if compare.MA_maxe == best_maxe %}class="text-success fw-bold"{% endif %}>{{ compare.MA_maxe }}</a></td>
+          <td><a href="#" {% if compare.LSTM_maxe == best_maxe %}class="text-success fw-bold"{% endif %}>{{ compare.LSTM_maxe }}</a></td>
+          <td><a href="#" {% if compare.ExpSm_maxe == best_rmse %}class="text-success fw-bold"{% endif %}>{{ compare.ExpSm_rmse }}</a></td>
+          <td><a href="#" {% if compare.ARIMA_maxe == best_rmse %}class="text-success fw-bold"{% endif %}>{{ compare.ARIMA_rmse }}</a></td>
+          <td><a href="#" {% if compare.SARIMA_maxe == best_rmse %}class="text-success fw-bold"{% endif %}>{{ compare.SARIMA_rmse }}</a></td>
+          <td><a href="#" {% if compare.MA_maxe == best_rmse %}class="text-success fw-bold"{% endif %}>{{ compare.MA_rmse }}</a></td>
+          <td><a href="#" {% if compare.LSTM_maxe == best_rmse %}class="text-success fw-bold"{% endif %}>{{ compare.LSTM_rmse }}</a></td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 </div>
-<script>
-
-</script>
 
 {% endblock content %}
 

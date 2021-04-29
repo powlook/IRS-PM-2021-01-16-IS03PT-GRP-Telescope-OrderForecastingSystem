@@ -155,3 +155,53 @@ class ForecastExpSmoothing(db.Model, Serializer):
     def serialize(self):
         d = Serializer.serialize(self)
         return d
+
+class CompareForecasts(db.Model, Serializer):
+    __tablename__ = 'compare_forecasts'
+
+    item = Column(Text, primary_key=True)
+    ARIMA_rmse = Column(Text)
+    SARIMA_rmse = Column(Text)
+    MA_rmse = Column(Text)
+    ExpSm_rmse = Column(Text)
+    LSTM_rmse = Column(Text)
+    ARIMA_maxe = Column(Text)
+    SARIMA_maxe = Column(Text)
+    MA_maxe = Column(Text)
+    ExpSm_maxe = Column(Text)
+    LSTM_maxe = Column(Text)
+
+    def __repr__(self):
+        return str(self.month + '_' + self.item)
+
+    def serialize(self):
+        d = Serializer.serialize(self)
+        return d
+
+class AnalysisMBA(db.Model, Serializer):
+    __tablename__ = 'combo_recommended_table'
+
+    LHS = Column(Text, primary_key=True)
+    RHS = Column(Text, primary_key=True)
+    Confidence = Column(Float)
+
+    def __repr__(self):
+        return str(self.month + '_' + self.item)
+
+    def serialize(self):
+        d = Serializer.serialize(self)
+        return d
+
+class AnalysisMBACustomer(db.Model, Serializer):
+    __tablename__ = 'customer_recommended_table'
+
+    customer_id = Column(Text, primary_key=True)
+    recommended_sku = Column(Text)
+    line_items_sku = Column(Text)
+
+    def __repr__(self):
+        return str(self.month + '_' + self.item)
+
+    def serialize(self):
+        d = Serializer.serialize(self)
+        return d

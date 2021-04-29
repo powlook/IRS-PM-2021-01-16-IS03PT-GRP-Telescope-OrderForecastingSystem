@@ -135,3 +135,11 @@ button.icon {
 button.icon span {
   pointer-events: none;
 }
+
+.table-wrapper-accuracy td {
+  text-align: center;
+}
+
+.table-wrapper-accuracy td:first-child {
+  text-align: left;
+}

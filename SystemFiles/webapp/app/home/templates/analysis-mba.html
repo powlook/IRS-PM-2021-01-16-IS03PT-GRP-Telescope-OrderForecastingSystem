@@ -9,28 +9,92 @@
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
   <div class="d-block mb-4 mb-md-0">
-    <p class="mb-0">Discover association between products</p>
+    <p class="mb-0">For <strong>New Customers</strong>, recommend these products based on item to item association mining</p>
   </div>
 </div>
 <div class="card card-body shadow-sm table-wrapper table-responsive">
   <table class="table table-hover">
     <thead>
       <tr>
-        <th>Users who bought</th>
-        <th>Also bought</th>
+        <th>Users who purchased</th>
+        <th>Also purchased (Confidence)</th>
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td><a href="#" class="fw-bold">Product A</a></td>
-        <td><span class="fw-normal">Product A1, A2, A3</span></td>
-      </tr>
-      <tr>
-        <td><a href="#" class="fw-bold">Product A</a></td>
-        <td><span class="fw-normal">Product A1, A2, A3</span></td>
-      </tr>
+      {% for item in analysis_items %}
+        <tr>
+          <td><a href="#" class="fw-bold">{{ item.LHS }}</a></td>
+          <td><span class="fw-normal">{{ item.RHS }} <small class="text-success">({{ "%.2f"|format(item.Confidence*100) }})</small></span></td>
+        </tr>
+      {% endfor %}
     </tbody>
   </table>
+</div>
+
+<hr class="mt-5 mb-2" />
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
+  <div class="d-block mb-4 mb-md-0">
+    <p class="mb-0">For <strong>Existing Customers</strong>, recommend these products based on their past purchases</p>
+  </div>
+</div>
+<div class="card card-body shadow-sm table-wrapper table-responsive">
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>Customer ID</th>
+        <th>Purchased Products</th>
+        <th>Recommended Products (Confidence)</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in analysis_customer %}
+        <tr>
+          <td><a href="#" class="fw-bold">{{ item.customer_id|round|int }}</a></td>
+          <td><span class="fw-normal">{{ item.bought }}</span></td>
+          <td><span class="fw-normal">{{ item.recommend|safe }}</span></td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- Pagination Links-->
+  <div class="card-footer px-3 bproduct-0 d-flex align-items-center justify-content-between">
+    <nav aria-label="Page navigation example">
+      <ul class="pagination mb-0">
+        <li class="page-item">
+          <a class="page-link"
+            href="{{ url_for('home_blueprint.analysis_mba', page=analysis_customer_pagination.prev_num) }}"
+            {% if analysis_customer_pagination.page == 1 %}disabled{% endif %}>
+            Previous
+          </a>
+        </li>
+        {% for page_num in analysis_customer_pagination.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+          {% if page_num %}
+          <!-- Check for the active page and set the link to "Active"-->
+            {% if analysis_customer_pagination.page == page_num %}
+              <li class="page-item active">
+                <a class="page-link" href="{{ url_for('home_blueprint.analysis_mba', page=page_num) }}">{{ page_num }}</a>
+              </li>
+            {% else %}
+              <li class="page-item">
+                <a class="page-link" href="{{ url_for('home_blueprint.analysis_mba', page=page_num) }}">{{ page_num }}</a>
+              </li>
+            {% endif %}
+          {% else %}
+            <li class="page-item"><div class="page-link">...</div></li>
+          {% endif %}
+        {% endfor %}
+        <li class="page-item">
+          <a class="page-link"
+            href="{{ url_for('home_blueprint.analysis_mba', page=analysis_customer_pagination.next_num) }}"
+            {% if analysis_customer_pagination.page == analysis_customer_pagination.pages %}disabled{% endif %}>
+            Next
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <div class="fw-bold small d-none d-lg-block">Total Records <b>{{ analysis_customer_pagination.total }}</b>, Showing page <b>{{ analysis_customer_pagination.page }}</b> out of <b>{{ analysis_customer_pagination.pages }}</b> pages</div>
+  </div>
 </div>
 
 {% endblock content %}
