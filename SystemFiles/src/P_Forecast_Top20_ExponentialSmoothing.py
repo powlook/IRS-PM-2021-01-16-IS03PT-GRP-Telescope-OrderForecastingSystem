@@ -33,11 +33,11 @@ for item in items:
     rmse = round(np.sqrt(mean_squared_error(test, adj_forecast[:3])), 2)
     maxe = abs(sum(test - adj_forecast[:3]))
     res = pd.DataFrame(zip(item_name, test, adj_forecast),
-                       index=['m+1', 'm+2', 'm+3'], columns=['item', 'test', 'forecast'])
+                       index=['m+1', 'm+2', 'm+3'], columns=['item', 'test', 'predict'])
     res['rmse'] = ''
     res.loc['m+1', 'rmse'] = float(rmse)
-    res['abs(diff)'] = ''
-    res.loc['m+1', 'abs(diff)'] = maxe
+    res['maxe'] = ''
+    res.loc['m+1', 'maxe'] = maxe
     results = pd.concat([results, res], axis=0)
 
 results = results.reset_index().rename(columns={'index': 'month'})

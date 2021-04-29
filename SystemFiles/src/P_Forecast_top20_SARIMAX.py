@@ -53,13 +53,13 @@ for item in items:
     item_name = [item for x in range(3)]
     params.append([order, sorder, trend])
     rmse = round(np.sqrt(mean_squared_error(test, adj_forecast[0:3])), 2)
-    diff = abs(sum(test.values - adj_forecast[0:3]))
+    maxe = abs(sum(test.values - adj_forecast[0:3]))
     res = pd.DataFrame(zip(item_name, np.array(test), np.array(adj_forecast)),
                        index=['m+1', 'm+2', 'm+3'], columns=['item', 'test', 'predict'])
     res['rmse'] = ''
     res.loc['m+1', 'rmse'] = rmse
-    res['abs(diff)'] = ''
-    res.loc['m+1', 'abs(diff)'] = diff
+    res['maxe'] = ''
+    res.loc['m+1', 'maxe'] = maxe
     results = pd.concat([results, res], axis=0)
 
 # #### Writing to database
