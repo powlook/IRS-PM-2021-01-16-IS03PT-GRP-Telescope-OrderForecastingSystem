@@ -34,13 +34,13 @@ for item in items:
     adj_forecast = [0 if x < 0 else int(round(x)) for x in forecast]
     item_name = [item for x in range(3)]
     rmse = round(np.sqrt(mean_squared_error(test, adj_forecast)), 2)
-    diff = abs(sum(test - adj_forecast))
+    maxe = abs(sum(test - adj_forecast))
     res = pd.DataFrame(zip(item_name, np.array(test), np.array(adj_forecast)),
                        index=['m+1', 'm+2', 'm+3'], columns=['item', 'test', 'predict'])
     res['rmse'] = ''
     res.loc['m+1', 'rmse'] = rmse
-    res['abs(diff)'] = ''
-    res.loc['m+1', 'abs(diff)'] = diff
+    res['maxe'] = ''
+    res.loc['m+1', 'maxe'] = maxe
     results = pd.concat([results, res], axis=0)
 
 
