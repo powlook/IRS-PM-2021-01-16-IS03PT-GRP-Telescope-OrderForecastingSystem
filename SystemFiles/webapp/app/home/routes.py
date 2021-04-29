@@ -197,14 +197,37 @@ def analysis_mba():
 @login_required
 def api_export_forecasts():
     forecast = request.args.get('forecast')
-    print(forecast)
-    forecastArima = ForecastArima.serialize_list(ForecastArima.query.all())
-    forecastArima = map(lambda x: x.values(), forecastArima)
+    if forecast == 'arima':
+        forecast_list = ForecastArima.serialize_list(ForecastArima.query.all())
+    elif forecast == 'sarima':
+        forecast_list = ForecastSarima.serialize_list(ForecastSarima.query.all())
+    elif forecast == 'rolling-ma':
+        forecast_list = ForecastRollingMA.serialize_list(ForecastRollingMA.query.all())
+    elif forecast == 'exp-smoothing':
+        forecast_list = ForecastExpSmoothing.serialize_list(ForecastExpSmoothing.query.all())
+    else:
+        forecast_list = ForecastLSTM.serialize_list(ForecastLSTM.query.all())
+    
+    forecast_list = map(lambda x: x.values(), forecast_list)
+
+    formatted_data = [['SKU', 'Date', 'Prediction', 'Actual']]
+    for d in forecast_list:
+        arr = list(d)[0:4]
+        date = '2021-01'
+        if arr[0] == 'm+2':
+            date = '2021-02'
+        elif arr[0] == 'm+3':
+            date = '2021-03'
+        elif arr[0] == 'm+4':
+            date = '2021-04'
+        result = [arr[3], date, arr[2], arr[1]]
+        formatted_data.append(result)
+
     si = io.StringIO()
     cw = csv.writer(si)
-    cw.writerows(forecastArima)
+    cw.writerows(formatted_data)
     output = make_response(si.getvalue())
-    output.headers["Content-Disposition"] = "attachment; filename=export.csv"
+    output.headers["Content-Disposition"] = "attachment; filename=export" + forecast + ".csv"
     output.headers["Content-type"] = "text/csv"
     return output
 

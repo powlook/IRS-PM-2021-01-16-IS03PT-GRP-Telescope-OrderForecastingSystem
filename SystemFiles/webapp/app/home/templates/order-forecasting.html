@@ -12,7 +12,7 @@
           <p class="mb-0">Predict future product demand.</p>
       </div>
       <div class="d-block mx-2">
-        <button type="button" class="btn btn-sm btn-outline-primary">Export</button>
+        <button type="button" class="btn btn-sm btn-outline-primary" id="exportForecast">Export</button>
       </div>
     </div>
   </div>
@@ -74,7 +74,6 @@
 
     function getSkuForecastByDate(forecasts, skus) {
         const dates = ['m+1', 'm+2', 'm+3'];
-        debugger;
         const forecastQtyByDate = skus.reduce((acc, sku) => {
             const skuData = _.filter(forecasts, { item: sku })
             const dateQty = dates.map((date) => {
@@ -282,6 +281,13 @@
             const startDateVal = document.getElementById('startDate').value;
             currChart = updateData(orderproducts, skus, dates, startDateVal, currChart, forecasts[e.target.value])
         });
+
+        const exportForecast = document.getElementById('exportForecast');
+        exportForecast.addEventListener('click', function(e) {
+            const forecastVal = document.getElementById('forecastModel').value;
+            console.log('forecastVal', forecastVal);
+            window.open('/api/forecasts/csv?forecast=' + forecastVal, '_blank')
+        })
     });
 </script>
 
