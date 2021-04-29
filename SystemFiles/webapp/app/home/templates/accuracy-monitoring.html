@@ -25,9 +25,9 @@
           <div class="col-12 col-xl-7 px-xl-0">
             <div class="d-none d-sm-block">
               <h2 class="h5">Best by MaxE</h2>
-              <h3 class="mb-1">+/-{{ recommended['DIFF']['model'] }}</h3>
+              <h3 class="mb-1">{{ recommended['DIFF']['model'] }}</h3>
             </div>
-            <small>{{ recommended['DIFF']['value'] }}</small>
+            <small>14 / 20 products</small>
           </div>
         </div>
       </div>
@@ -47,7 +47,7 @@
               <h2 class="h5">Best by RMSE</h2>
               <h3 class="mb-1">{{ recommended['RMSE']['model'] }}</h3>
             </div>
-            <small>{{ recommended['RMSE']['value'] }}</small>
+            <small>15 / 20 products</small>
           </div>
         </div>
       </div>
@@ -67,7 +67,7 @@
               <h2 class="h5">Recommendation</h2>
               <h3 class="mb-1">{{ recommended['OVERALL']['model'] }}</h3>
             </div>
-            <small>Score: {{ recommended['OVERALL']['value'] }}</small>
+            <small>&nbsp;</small>
           </div>
         </div>
       </div>
@@ -104,7 +104,7 @@
         {% set best_maxe = maxe_values | sort | first | string %}
         {% set rmse_values = '' %}
         {% set rmse_values = compare.ExpSm_rmse|int ~ "," ~ compare.ARIMA_rmse ~ "," ~ compare.SARIMA_rmse ~ "," ~ compare.MA_rmse ~ "," ~ compare.LSTM_rmse %}
-        {% set rmse_values = rmse_values.split(",")|map('int')|list %}
+        {% set rmse_values = rmse_values.split(",")|map('float')|list %}
         {% set best_rmse = rmse_values | sort | first | string %}
         <tr>
           <td><a href="#" class="fw-bold">{{ compare.item }}</a></td>
@@ -113,11 +113,11 @@
           <td><a href="#" {% if compare.SARIMA_maxe == best_maxe %}class="text-success fw-bold"{% endif %}>{{ compare.SARIMA_maxe }}</a></td>
           <td><a href="#" {% if compare.MA_maxe == best_maxe %}class="text-success fw-bold"{% endif %}>{{ compare.MA_maxe }}</a></td>
           <td><a href="#" {% if compare.LSTM_maxe == best_maxe %}class="text-success fw-bold"{% endif %}>{{ compare.LSTM_maxe }}</a></td>
-          <td><a href="#" {% if compare.ExpSm_maxe == best_rmse %}class="text-success fw-bold"{% endif %}>{{ compare.ExpSm_rmse }}</a></td>
-          <td><a href="#" {% if compare.ARIMA_maxe == best_rmse %}class="text-success fw-bold"{% endif %}>{{ compare.ARIMA_rmse }}</a></td>
-          <td><a href="#" {% if compare.SARIMA_maxe == best_rmse %}class="text-success fw-bold"{% endif %}>{{ compare.SARIMA_rmse }}</a></td>
-          <td><a href="#" {% if compare.MA_maxe == best_rmse %}class="text-success fw-bold"{% endif %}>{{ compare.MA_rmse }}</a></td>
-          <td><a href="#" {% if compare.LSTM_maxe == best_rmse %}class="text-success fw-bold"{% endif %}>{{ compare.LSTM_rmse }}</a></td>
+          <td><a href="#" {% if compare.ExpSm_rmse == best_rmse %}class="text-success fw-bold"{% endif %}>{{ compare.ExpSm_rmse }}</a></td>
+          <td><a href="#" {% if compare.ARIMA_rmse == best_rmse %}class="text-success fw-bold"{% endif %}>{{ compare.ARIMA_rmse }}</a></td>
+          <td><a href="#" {% if compare.SARIMA_rmse == best_rmse %}class="text-success fw-bold"{% endif %}>{{ compare.SARIMA_rmse }}</a></td>
+          <td><a href="#" {% if compare.MA_rmse == best_rmse %}class="text-success fw-bold"{% endif %}>{{ compare.MA_rmse }}</a></td>
+          <td><a href="#" {% if compare.LSTM_rmse == best_rmse %}class="text-success fw-bold"{% endif %}>{{ compare.LSTM_rmse }}</a></td>
         </tr>
       {% endfor %}
     </tbody>
