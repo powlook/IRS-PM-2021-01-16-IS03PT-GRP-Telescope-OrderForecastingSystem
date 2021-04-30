@@ -14,30 +14,27 @@ The group's portfolio spans across digital, media, manufacturing and retail divi
 
 <img src="SystemFiles/diagrams/bandlab_brands.png" style="float: left; margin-right: 0px;" />
 
-
 #### THE PROBLEM STATEMENT
 
 Besides their own brands, the company currently also handles over 200 brands and 16,000 products. Procurement of stocks are usually done monthly. Currently, forecasting of sales order are done monthly using Excel. This is not only time-consuming with the number of products but the forecasted accuracy is also far from ideal. The company is looking at ways where they can better forecast the sales. This is where we come in.
 
 #### OUR PROPOSAL
 
-We will create a Web Application which will:
-   1. Forecast Orders per Product SKU (which will help with stock procurement)
-      We will develop several models from general rolling moving average to statistical timeseries to deep learning models utilising LSTM techniques. We will select the best model in performance comparison
-   2. Besides forecasting, the application will also do a Marketing Basket Analysis to identify products to recommend from those    
-      already purchase. This may help the sales department to better plan their marketing campaign
-
+1. The system will be a complete pipeline from ingesting raw data from the database and writing back processed data back to the DB. The web application will be able to draw from the processed database to display and to decide.
+2. To develop several forecasting models and select the best for the company to use for their application. The recommended model will be selected based on the lowest Maximum Absolute Error (MaxE) and the lowest Root Mean Squared Error (RMSE).
+3. To extract insights from the historical transaction data to provide recommendations for products bundling during marketing promotions and making post sales recommendations to previous customers. We will make use of associative mining techniques to accomplish this objective.
 
 ---
 
 ## SECTION 3 : CREDITS / PROJECT CONTRIBUTION
 
-| Official Full Name | Student ID | Work Items (Who Did What)        | Email (Optional)      |
-| :----------------- | :---------------------------: | :------------------------------- | :-------------------- |
-| YAP Pow Look       |           A1234567A           | xxxxxxxxxx yyyyyyyyyy zzzzzzzzzz | A1234567A@nus.edu.sg  |
-| CHOW Kok Peng      |           A1234567B           | xxxxxxxxxx yyyyyyyyyy zzzzzzzzzz | A1234567B@gmail.com   |
-| Nicole TAN Oncogo  |           A1234567C           | xxxxxxxxxx yyyyyyyyyy zzzzzzzzzz | A1234567C@outlook.com |
-| NGUYEN Minh Tien   |           A1234567D           | xxxxxxxxxx yyyyyyyyyy zzzzzzzzzz | A1234567D@yahoo.com   |
+
+| Official Full Name | Student ID | Work Items (Who Did What)        | Email (Optional)       |
+| :------------------- | :----------: | :--------------------------------- | :----------------------- |
+| YAP Pow Look       | A0163450M | xxxxxxxxxx yyyyyyyyyy zzzzzzzzzz | e0147014@u.nus.edu |
+| CHOW Kok Peng      | A0195403H | xxxxxxxxxx yyyyyyyyyy zzzzzzzzzz | e0385034@u.nus.edu    |
+| Nicole TAN Oncogo  | A0229981R | xxxxxxxxxx yyyyyyyyyy zzzzzzzzzz | e0687388@u.nus.edu  |
+| NGUYEN Minh Tien   | A0229980R | xxxxxxxxxx yyyyyyyyyy zzzzzzzzzz | e0687389@u.nus.edu   |
 
 ---
 
@@ -55,18 +52,15 @@ We will create a Web Application which will:
 
 #### Instructions on how to clone the repo and launch the application
 
-
 ### [ 2 ] To run the system in other/local machine using docker
 
 #### Instructions to install docker
-
 
 ---
 
 ## SECTION 6 : PROJECT REPORT / PAPER
 
 `Refer to project report at Github Folder: ProjectReport`
-
 
 ---
 
