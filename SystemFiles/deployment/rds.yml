@@ -1,0 +1,75 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+
+Description: Creates RDS MySQL database cluster
+
+Parameters:
+  DBUsername:
+    AllowedPattern: ^([a-zA-Z0-9]*)$
+    Description: The Amazon RDS master username.
+    ConstraintDescription: Must contain only alphanumeric characters (minimum 8; maximum 16).
+    MaxLength: 16
+    MinLength: 3
+    Type: String
+  DBPassword:
+    AllowedPattern: ^([a-z0-9A-Z`~!#$%^&*()_+,\\-])*$
+    ConstraintDescription: Must be letters (upper or lower), numbers, and these special characters '_'`~!#$%^&*()_+,-
+    Description: The Amazon RDS master password.
+    MaxLength: 41
+    MinLength: 8
+    NoEcho: true
+    Type: String
+  DBName:
+    AllowedPattern: ^([a-zA-Z0-9_]*)$
+    Description: The Amazon RDS master database name.
+    Type: String
+  DBInstanceType:
+    Default: db.t2.micro
+    Description: Creates an additional Provisioned Database with this class
+    Type: String
+
+Resources:
+  DBInstance:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      AllocatedStorage: 20
+      AllowMajorVersionUpgrade: false
+      AutoMinorVersionUpgrade: true
+      BackupRetentionPeriod: 7
+      DBName: !Ref DBName
+      DBInstanceClass: !Ref DBInstanceType
+      DBSecurityGroups:
+      - !Ref DBRDSSecurityGroup
+      Engine: mysql
+      EngineVersion: '8.0.23'
+      MasterUsername: !Ref DBUsername
+      MasterUserPassword: !Ref DBPassword
+      MultiAZ: false
+      PreferredBackupWindow: 18:00-19:00
+      PreferredMaintenanceWindow: sun:19:00-sun:20:00
+      PubliclyAccessible: true
+
+  DBRDSSecurityGroup:
+    Type: AWS::RDS::DBSecurityGroup
+    Properties:
+      GroupDescription: Allow access to the RDS
+      DBSecurityGroupIngress:
+        - CIDRIP: 0.0.0.0/0
+
+Outputs:
+  DBAddress:
+    Value: !GetAtt DBInstance.Endpoint.Address
+    Export:
+      Name: iss-project-rds-endpoint
+  DBName:
+    Value: !Ref DBName
+    Export:
+      Name: iss-project-rds-db-name
+  DBUsername:
+    Value: !Ref DBUsername
+    Export:
+      Name: iss-project-rds-username
+  DBPassword:
+    Value: !Ref DBPassword
+    Export:
+      Name: iss-project-rds-password

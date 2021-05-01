@@ -75,10 +75,13 @@ for item in items:
         y_test.append(data[i+4])
     item_name = [item for x in range(3)]
     rmse = round(np.sqrt(mean_squared_error(y_test, preds)), 2)
+    maxe = abs(sum(np.array(y_test) - preds))
     res = pd.DataFrame(zip(item_name, np.array(y_test), np.array(preds)),
                        index=['m+1', 'm+2', 'm+3'], columns=['item', 'test', 'predict'])
     res['rmse'] = ''
     res.loc['m+1', 'rmse'] = rmse
+    res['maxe'] = ''
+    res.loc['m+1', 'maxe'] = maxe
     results = pd.concat([results, res], axis=0)
 
 results = results.reset_index().rename(columns={'index': 'month'})
