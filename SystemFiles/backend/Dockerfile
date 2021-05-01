@@ -3,7 +3,7 @@ FROM python:3.6
 MAINTAINER tien.sp@gmail.com
 
 COPY requirements.txt env ./
-RUN pip install -r requirements.txt
+RUN pip install -r requirements.txt --default-timeout=1000
 
 WORKDIR /cron
 ADD mycron /cron

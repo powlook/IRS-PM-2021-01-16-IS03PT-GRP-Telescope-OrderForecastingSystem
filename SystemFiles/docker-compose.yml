@@ -3,26 +3,21 @@ services:
   appseed-app:
     restart: always
     env_file: ./webapp/env
-    build: ./webapp
+    build:
+      context: ./webapp
+      network: host
     ports:
       - "5005:5005"
-    networks:
-      - db_network
-      - web_network
   backend-app:
     restart: always
     env_file: ./backend/env
-    build: ./backend
+    build:
+      context: ./backend
+      network: host
     volumes:
       - ./notebooks:/app/backend/notebooks
       - ./notebooks:/app/backend/notebook
       - ./src:/app/backend/src
       - ./data-processed:/app/backend/data-processed
       - ./data-raw:/app/backend/data-raw
-    networks:
-      - db_network
-networks:
-  db_network:
-    driver: bridge
-  web_network:
-    driver: bridge
+
