@@ -1,0 +1,3 @@
+# * * * * * /cron/do.sh >>  /cron/cron.log 2>&1 # every minute
+# 0 0 1 * * /cron/do.sh >>  /cron/cron.log 2>&1 # every month
+0 0 * * * /cron/do.sh >>  /cron/cron.log 2>&1   # every day for demo purpose

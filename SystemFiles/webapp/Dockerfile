@@ -1,6 +1,7 @@
 FROM python:3.6
 
 ENV FLASK_APP run.py
+ENV FLASK_ENV development
 
 COPY run.py gunicorn-cfg.py requirements.txt config.py .env ./
 COPY app app
