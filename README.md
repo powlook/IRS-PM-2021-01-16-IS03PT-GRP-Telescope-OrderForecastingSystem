@@ -40,7 +40,8 @@ Besides their own brands, the company currently also handles over 200 brands and
 
 ## SECTION 4 : VIDEO OF SYSTEM MODELLING & USE CASE DEMO
 
-<img src="SystemFiles/diagrams/bandlab.png" style="float: left; margin-right: 0px;" />
+[![Introduction](https://img.youtube.com/vi/5nTX7VEcRDA/0.jpg)](https://youtu.be/5nTX7VEcRDA)
+[![Introduction](https://img.youtube.com/vi/cNGFABY39lU/0.jpg)](https://youtu.be/cNGFABY39lU)
 
 ---
 
