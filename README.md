@@ -2,7 +2,7 @@
 
 ## BANDLAB Technologies - Sales Forecasting System
 
-<img src="SystemFiles/diagrams/sales_forecast3.png" style="float: left; margin-right: 0px;" />
+<img src="SystemFiles/diagrams/bandlab_banner.png" style="float: left; margin-right: 0px;" />
 
 ---
 
@@ -33,8 +33,8 @@ Besides their own brands, the company currently also handles over 200 brands and
 | :------------------- | :----------: | :--------------------------------- | :----------------------- |
 | YAP Pow Look       | A0163450M | xxxxxxxxxx yyyyyyyyyy zzzzzzzzzz | e0147014@u.nus.edu |
 | CHOW Kok Peng      | A0195403H | xxxxxxxxxx yyyyyyyyyy zzzzzzzzzz | e0385034@u.nus.edu    |
-| Nicole TAN Oncogo  | A0229981R | xxxxxxxxxx yyyyyyyyyy zzzzzzzzzz | e0687388@u.nus.edu  |
-| NGUYEN Minh Tien   | A0229980R | xxxxxxxxxx yyyyyyyyyy zzzzzzzzzz | e0687389@u.nus.edu   |
+| TAN Nicole Ongoco  | A0229980R | xxxxxxxxxx yyyyyyyyyy zzzzzzzzzz | e0687388@u.nus.edu  |
+| NGUYEN Minh Tien   | A0229981N | xxxxxxxxxx yyyyyyyyyy zzzzzzzzzz | e0687389@u.nus.edu   |
 
 ---
 
