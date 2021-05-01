@@ -4,12 +4,15 @@ Copyright (c) 2019 - present AppSeed.us
 """
 
 from app.home import blueprint
-from app.home.models import Order, Product, OrderProduct, ForecastArima, ForecastSarima, ForecastLSTM, ForecastRollingMA
-from flask import render_template, redirect, url_for, request, jsonify
+from app.home.models import Order, Product, OrderProduct, ForecastArima, ForecastSarima, ForecastLSTM, ForecastRollingMA, ForecastExpSmoothing, CompareForecasts, AnalysisMBA, AnalysisMBACustomer
+from flask import render_template, redirect, url_for, request, jsonify, make_response
 from flask_login import login_required, current_user
 from app import login_manager
 from jinja2 import TemplateNotFound
+import json
 import sqlalchemy as sa
+import io
+import csv
 
 @blueprint.route('/index')
 @login_required
@@ -44,12 +47,14 @@ def order_forecasting():
     forecastSarima = ForecastSarima.serialize_list(ForecastSarima.query.all())
     forecastLSTM = ForecastLSTM.serialize_list(ForecastLSTM.query.all())
     forecastRollingMA = ForecastRollingMA.serialize_list(ForecastRollingMA.query.all())
+    forecastExpSmoothing = ForecastRollingMA.serialize_list(ForecastExpSmoothing.query.all())
     forecasts = {
         'recommended': forecastLSTM,
         'arima': forecastArima,
         'sarima': forecastSarima,
         'lstm': forecastLSTM,
-        'rolling-ma': forecastRollingMA
+        'rolling-ma': forecastRollingMA,
+        'exp-smoothing': forecastExpSmoothing,
     }
     orderproducts = OrderProduct.group_by_product()
 
@@ -110,6 +115,7 @@ def get_max(obj):
 @blueprint.route('/accuracy-monitoring', methods=['GET'])
 @login_required
 def accuracy_monitoring():
+    compareForecasts = CompareForecasts.query.all()
     forecastArima = ForecastArima.serialize_list(ForecastArima.query.all())
     forecastSarima = ForecastSarima.serialize_list(ForecastSarima.query.all())
     forecastLSTM = ForecastLSTM.serialize_list(ForecastLSTM.query.all())
@@ -150,6 +156,7 @@ def accuracy_monitoring():
 
     return render_template('accuracy-monitoring.html',
         forecasts=forecasts,
+        compareForecasts=compareForecasts,
         accuracy_diff=accuracy_diff,
         accuracy_rmse=accuracy_rmse,
         recommended=recommended,
@@ -159,19 +166,70 @@ def accuracy_monitoring():
 @blueprint.route('/analysis-mba', methods=['GET'])
 @login_required
 def analysis_mba():
+    page = request.args.get('page', 1, type=int)
+    mba_items = AnalysisMBA.query.all()
+    mba_customers_paginate = AnalysisMBACustomer.query.filter(AnalysisMBACustomer.recommended_sku != "[]").paginate(page=page, per_page=10)
+
+    formatted_mba_customers = []
+    for c in mba_customers_paginate.items:
+        recommend_arr = json.loads(c.recommended_sku)
+        recommend_arr = recommend_arr[:3]
+        recommend_arr = list(map(lambda x: (x[0] + " <small class=\"text-success\">(" + str(round(x[1] * 100, 2)) + ")</small>"), recommend_arr))
+
+        line_items_arr = json.loads(c.line_items_sku)[:3]
+
+        customer = {
+            'customer_id': c.customer_id,
+            'bought': ", ".join(line_items_arr),
+            'recommend': ", ".join(recommend_arr),
+        }
+        formatted_mba_customers.append(customer)
 
     return render_template('analysis-mba.html',
         segment='analysis-mba',
+        analysis_items = mba_items,
+        analysis_customer_pagination = mba_customers_paginate,
+        analysis_customer = formatted_mba_customers,
         title="Market Basket Analysis")
 
-
 ### API
-@blueprint.route('/api/orders', methods=['GET'])
+@blueprint.route('/api/forecasts/csv', methods=['GET'])
 @login_required
-def api_get_orders():
-    orders = Order.query.limit(5).all()
-    return jsonify(Order.serialize_list(orders))
-    # return jsonify({ 'order_id': 1, 'name': 'ABC' }, { 'order_id': 2, 'name': 'CDEF' })
+def api_export_forecasts():
+    forecast = request.args.get('forecast')
+    if forecast == 'arima':
+        forecast_list = ForecastArima.serialize_list(ForecastArima.query.all())
+    elif forecast == 'sarima':
+        forecast_list = ForecastSarima.serialize_list(ForecastSarima.query.all())
+    elif forecast == 'rolling-ma':
+        forecast_list = ForecastRollingMA.serialize_list(ForecastRollingMA.query.all())
+    elif forecast == 'exp-smoothing':
+        forecast_list = ForecastExpSmoothing.serialize_list(ForecastExpSmoothing.query.all())
+    else:
+        forecast_list = ForecastLSTM.serialize_list(ForecastLSTM.query.all())
+    
+    forecast_list = map(lambda x: x.values(), forecast_list)
+
+    formatted_data = [['SKU', 'Date', 'Prediction', 'Actual']]
+    for d in forecast_list:
+        arr = list(d)[0:4]
+        date = '2021-01'
+        if arr[0] == 'm+2':
+            date = '2021-02'
+        elif arr[0] == 'm+3':
+            date = '2021-03'
+        elif arr[0] == 'm+4':
+            date = '2021-04'
+        result = [arr[3], date, arr[2], arr[1]]
+        formatted_data.append(result)
+
+    si = io.StringIO()
+    cw = csv.writer(si)
+    cw.writerows(formatted_data)
+    output = make_response(si.getvalue())
+    output.headers["Content-Disposition"] = "attachment; filename=export" + forecast + ".csv"
+    output.headers["Content-type"] = "text/csv"
+    return output
 
 @blueprint.route('/<template>')
 @login_required

@@ -1,5 +1,37 @@
+.container--bg {
+  height: calc(100vh - 150px);
+  max-width: 100vw;
+}
+
+.container--bg .form-bg-image{
+  background-size: contain !important;
+  background-position: center !important;
+  height: 100%;
+}
+
+.card-body {
+  padding: 15px;
+}
+
 .table-wrapper-forecast {
   overflow: unset;
+}
+
+.table-wrapper-forecast th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: #fff;
+}
+
+.table-wrapper-forecast th.sku-col,
+.table-wrapper-forecast th.forecast-col {
+  z-index: 2;
+}
+
+.table-wrapper-forecast th.dates,
+.table-wrapper-forecast th.forecast-col {
+  top: 42px;
 }
 
 td.sticky-col,
@@ -66,7 +98,8 @@ td.sku-col {
 }
 
 .wrapper {
-  height: 80vh;
+  height: 30vh;
+  min-height: 250px;
   overflow-x: auto;
   overflow-y: auto;
   position: relative;
@@ -101,4 +134,12 @@ button.icon {
 
 button.icon span {
   pointer-events: none;
+}
+
+.table-wrapper-accuracy td {
+  text-align: center;
+}
+
+.table-wrapper-accuracy td:first-child {
+  text-align: left;
 }
