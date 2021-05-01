@@ -1,0 +1,10 @@
+SECRET_KEY=S3cr3t_K#Key
+DB_ENGINE=mysql
+DB_NAME=iss_project
+DB_HOST=idm5peipdsus5o.crcvo0yw3sz7.ap-southeast-1.rds.amazonaws.com
+DB_PORT=3306
+DB_USERNAME=iss
+DB_PASS=6Jg3bwm56xtJ2mrfNQwvsaY$
+
+FLASK_APP=run.py
+FLASK_ENV=development
