@@ -50,24 +50,16 @@ Besides their own brands, the company currently also handles over 200 brands and
 
 ## SECTION 5 : USER GUIDE
 
-`Refer to appendix <Installation & User Guide> in project report at Github Folder: ProjectReport`
-
-### [ 1 ] To run the system using github
-
-#### Instructions on how to clone the repo and launch the application
-
-### [ 2 ] To run the system in other/local machine using docker
-
-#### Instructions to install docker
+Refer to `Appendix <Installation & User Guide>` in project report at Github Folder: `ProjectReport`
 
 ---
 
 ## SECTION 6 : PROJECT REPORT / PAPER
 
-`Refer to project report at Github Folder: ProjectReport`
+Refer to Github Folder: `ProjectReport`
 
 ---
 
 ## SECTION 7 : MISCELLANEOUS
 
-`Refer to Github Folder: Miscellaneous`
+Refer to Github Folder: `Miscellaneous`
