@@ -2,7 +2,7 @@
 
 ## BANDLAB Technologies - Sales Forecasting System
 
-<img src="SystemFiles/diagrams/sales_forecast3.png" style="float: left; margin-right: 0px;" />
+<img src="SystemFiles/diagrams/bandlab_banner.png" style="float: left; margin-right: 0px;" />
 
 ---
 
@@ -31,39 +31,35 @@ Besides their own brands, the company currently also handles over 200 brands and
 
 | Official Full Name | Student ID | Work Items (Who Did What)        | Email (Optional)       |
 | :------------------- | :----------: | :--------------------------------- | :----------------------- |
-| YAP Pow Look       | A0163450M | xxxxxxxxxx yyyyyyyyyy zzzzzzzzzz | e0147014@u.nus.edu |
-| CHOW Kok Peng      | A0195403H | xxxxxxxxxx yyyyyyyyyy zzzzzzzzzz | e0385034@u.nus.edu    |
-| Nicole TAN Oncogo  | A0229981R | xxxxxxxxxx yyyyyyyyyy zzzzzzzzzz | e0687388@u.nus.edu  |
-| NGUYEN Minh Tien   | A0229980R | xxxxxxxxxx yyyyyyyyyy zzzzzzzzzz | e0687389@u.nus.edu   |
+| YAP Pow Look       | A0163450M | • Knowledge Discovery<br>• Forecasting Models<br>• Project Manager
+ | e0147014@u.nus.edu |
+| CHOW Kok Peng      | A0195403H | • Knowledge Discovery<br>• System Design<br>• Product Recommendation | e0385034@u.nus.edu    |
+| TAN Nicole Ongoco  | A0229980R | • Data Acquisition<br>• Web Application<br>• System Architecture
+ | e0687388@u.nus.edu  |
+| NGUYEN Minh Tien   | A0229981N | • Data Preprocessing<br>• Product Recommendation<br>• Deployment
+ | e0687389@u.nus.edu   |
 
 ---
 
 ## SECTION 4 : VIDEO OF SYSTEM MODELLING & USE CASE DEMO
 
-<img src="SystemFiles/diagrams/bandlab.png" style="float: left; margin-right: 0px;" />
+[![Introduction](https://img.youtube.com/vi/5nTX7VEcRDA/0.jpg)](https://youtu.be/5nTX7VEcRDA)
+[![Introduction](https://img.youtube.com/vi/cNGFABY39lU/0.jpg)](https://youtu.be/cNGFABY39lU)
 
 ---
 
 ## SECTION 5 : USER GUIDE
 
-`Refer to appendix <Installation & User Guide> in project report at Github Folder: ProjectReport`
-
-### [ 1 ] To run the system using github
-
-#### Instructions on how to clone the repo and launch the application
-
-### [ 2 ] To run the system in other/local machine using docker
-
-#### Instructions to install docker
+Refer to `Appendix <Installation & User Guide>` in project report at Github Folder: `ProjectReport`
 
 ---
 
 ## SECTION 6 : PROJECT REPORT / PAPER
 
-`Refer to project report at Github Folder: ProjectReport`
+Refer to Github Folder: `ProjectReport`
 
 ---
 
 ## SECTION 7 : MISCELLANEOUS
 
-`Refer to Github Folder: Miscellaneous`
+Refer to Github Folder: `Miscellaneous`
