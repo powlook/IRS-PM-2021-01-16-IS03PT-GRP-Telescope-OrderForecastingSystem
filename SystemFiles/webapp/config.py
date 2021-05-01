@@ -22,7 +22,7 @@ class Config(object):
         config( 'DB_PASS'     , default='yBLEBEqUJdQzQcw3'),
         config( 'DB_HOST'     , default='idm5peipdsus5o.crcvo0yw3sz7.ap-southeast-1.rds.amazonaws.com'),
         config( 'DB_PORT'     , default=3306),
-        config( 'DB_NAME'     , default='iss_project_backup' )
+        config( 'DB_NAME'     , default='iss_project' )
     )
 
 class ProductionConfig(Config):
