@@ -31,10 +31,13 @@ Besides their own brands, the company currently also handles over 200 brands and
 
 | Official Full Name | Student ID | Work Items (Who Did What)        | Email (Optional)       |
 | :------------------- | :----------: | :--------------------------------- | :----------------------- |
-| YAP Pow Look       | A0163450M | xxxxxxxxxx yyyyyyyyyy zzzzzzzzzz | e0147014@u.nus.edu |
-| CHOW Kok Peng      | A0195403H | xxxxxxxxxx yyyyyyyyyy zzzzzzzzzz | e0385034@u.nus.edu    |
-| TAN Nicole Ongoco  | A0229980R | xxxxxxxxxx yyyyyyyyyy zzzzzzzzzz | e0687388@u.nus.edu  |
-| NGUYEN Minh Tien   | A0229981N | xxxxxxxxxx yyyyyyyyyy zzzzzzzzzz | e0687389@u.nus.edu   |
+| YAP Pow Look       | A0163450M | • Knowledge Discovery<br>• Forecasting Models<br>• Project Manager
+ | e0147014@u.nus.edu |
+| CHOW Kok Peng      | A0195403H | • Knowledge Discovery<br>• System Design<br>• Product Recommendation | e0385034@u.nus.edu    |
+| TAN Nicole Ongoco  | A0229980R | • Data Acquisition<br>• Web Application<br>• System Architecture
+ | e0687388@u.nus.edu  |
+| NGUYEN Minh Tien   | A0229981N | • Data Preprocessing<br>• Product Recommendation<br>• Deployment
+ | e0687389@u.nus.edu   |
 
 ---
 
