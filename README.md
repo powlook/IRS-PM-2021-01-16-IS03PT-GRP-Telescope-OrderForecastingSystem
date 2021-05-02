@@ -1,6 +1,6 @@
 ## SECTION 1 : PROJECT TITLE
 
-## BANDLAB Technologies - Sales Forecasting System
+## BANDLAB Technologies - Order Forecasting System
 
 <img src="SystemFiles/diagrams/bandlab_banner.png" style="float: left; margin-right: 0px;" />
 
@@ -57,6 +57,3 @@ Refer to Github Folder: `ProjectReport`
 
 ---
 
-## SECTION 7 : MISCELLANEOUS
-
-Refer to Github Folder: `Miscellaneous`
