@@ -53,8 +53,6 @@ Refer to `Appendix 4 <Installation & User Guide>` in project report at Github Fo
 
 ## SECTION 6 : PROJECT REPORT / PAPER
 
-Refer to Github Folder: `ProjectReport`
+Refer to Github Folder: [ProjectReport](ProjectReports/Project%20Report%20-%20Order%20Forecasting.pdf)
 
 ---
-
-Refer to Github Folder: [ProjectReport](ProjectReports/Project%20Report%20-%20Order%20Forecasting.pdf)
