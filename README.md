@@ -47,7 +47,7 @@ Besides their own brands, the company currently also handles over 200 brands and
 
 ## SECTION 5 : USER GUIDE
 
-Refer to `Appendix <Installation & User Guide>` in project report at Github Folder: [ProjectReport](ProjectReports/Project%20Report%20-%20Order%20Forecasting.pdf)
+Refer to `Appendix 4 <Installation & User Guide>` in project report at Github Folder: [ProjectReport](ProjectReports/Project%20Report%20-%20Order%20Forecasting.pdf)
 
 ---
 
