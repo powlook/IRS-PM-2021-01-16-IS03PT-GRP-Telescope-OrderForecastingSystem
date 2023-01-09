@@ -1,18 +1,17 @@
 ## SECTION 1 : PROJECT TITLE
 
-## BANDLAB Technologies - Order Forecasting System
+## BL Technologies - Order Forecasting System
 
-<img src="SystemFiles/diagrams/bandlab_banner.png" style="float: left; margin-right: 0px;" />
+
 
 ---
 
 ## SECTION 2 : EXECUTIVE SUMMARY
 
-Established in 2016 and headquartered in Singapore, BandLab Technologies is a collective of global music brands that delivers authentic content, products and experiences for all music lovers. By integrating the physical, digital and social supply chain around music, BandLab Technologies brings together remarkable brands and people who are passionate about music, allowing them to leverage opportunities and achieve more together than as individuals.
+Established in 2016 and headquartered in Singapore, BL Technologies is a collective of global music brands that delivers authentic content, products and experiences for all music lovers. By integrating the physical, digital and social supply chain around music, BandLab Technologies brings together remarkable brands and people who are passionate about music, allowing them to leverage opportunities and achieve more together than as individuals.
 
 The group's portfolio spans across digital, media, manufacturing and retail divisions. Its flagship digital product, BandLab, is a social music platform that enables anyone to make music and share their creative process with musicians and fans. Bandlab's brand include the following, some of the household names like Swee Lee and Harmony which Singaporeans have been associated with since young
 
-<img src="SystemFiles/diagrams/bandlab_brands.png" style="float: left; margin-right: 0px;" />
 
 #### THE PROBLEM STATEMENT
 
